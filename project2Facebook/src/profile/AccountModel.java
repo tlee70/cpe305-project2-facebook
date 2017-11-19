@@ -2,6 +2,8 @@ package profile;
 
 import java.awt.Image;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class AccountModel {
@@ -9,8 +11,16 @@ public class AccountModel {
 	private String name;
 	private Image picture;
 	private List<AccountModel> friends;
-	private MessageWall wall;
+	private MessageWallModel wall;
+	private NewsFeedModel feed;
 	
+	public AccountModel(String name, Image picture) {
+		this.name = name;
+		this.picture = picture;
+		friends = new ArrayList<AccountModel>();
+		wall = new MessageWallModel();
+		feed = new NewsFeedModel();
+	}
 	
 	public String getName() {
 		return name;
@@ -36,8 +46,22 @@ public class AccountModel {
 		friends.add(account);
 	}
 	
-	public MessageWall getWall() {
+	public MessageWallModel getWall() {
 		return wall;
 	}
 	
+	public NewsFeedModel getFeed() {
+		return feed;
+	}
+	
+	public void post(String message) {
+		wall.post(message);
+		
+		AccountModel friend;
+		Iterator<AccountModel> iterator = friends.iterator();
+		while (iterator.hasNext()) {
+			friend = iterator.next();
+			friend.getFeed().post(this, message);
+		}
+	}
 }

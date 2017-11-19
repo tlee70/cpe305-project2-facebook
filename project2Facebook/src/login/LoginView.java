@@ -10,8 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-
-
 public class LoginView extends JFrame{
 	
 	private JTextField usernameTf = new JTextField(15);
