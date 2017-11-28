@@ -2,7 +2,8 @@ package profile;
 
 import java.awt.Image;
 import java.util.List;
-import java.util.ArrayList;
+
+import java.util.LinkedList;
 import java.util.Iterator;
 
 
@@ -12,14 +13,21 @@ public class AccountModel {
 	private Image picture;
 	private List<AccountModel> friends;
 	private MessageWallModel wall;
-	private NewsFeedModel feed;
+	private MessageWallModel feed;
+	
+	private List<WallObserver> wallObs;
+	private List<PictureObserver> picObs;
+	private List<NewsFeedObserver> feedObs;
 	
 	public AccountModel(String name, Image picture) {
 		this.name = name;
 		this.picture = picture;
-		friends = new ArrayList<AccountModel>();
+		friends = new LinkedList<AccountModel>();
 		wall = new MessageWallModel();
-		feed = new NewsFeedModel();
+		feed = new MessageWallModel();
+		wallObs = new LinkedList<WallObserver>();
+		picObs = new LinkedList<PictureObserver>();
+		feedObs = new LinkedList<NewsFeedObserver>();
 	}
 	
 	public String getName() {
@@ -35,7 +43,16 @@ public class AccountModel {
 	}
 	
 	public void setPicture(Image picture) {
-		this.picture = picture;
+		if (picture != null)
+			this.picture = picture;
+		
+		
+		PictureObserver observer;
+		Iterator<PictureObserver> observersIterator = picObs.iterator();
+		while (observersIterator.hasNext()) {
+			observer = observersIterator.next();
+			observer.updatePic(picture);
+		}
 	}
 	
 	public List<AccountModel> getFriends() {
@@ -46,22 +63,56 @@ public class AccountModel {
 		friends.add(account);
 	}
 	
-	public MessageWallModel getWall() {
-		return wall;
+	public void addWallObserver(WallObserver observer) {
+		wallObs.add(observer);
 	}
 	
-	public NewsFeedModel getFeed() {
-		return feed;
+	public void addPicObserver(PictureObserver observer) {
+		picObs.add(observer);
+	}
+	
+	public void addFeedObserver(NewsFeedObserver observer) {
+		feedObs.add(observer);
 	}
 	
 	public void post(String message) {
 		wall.post(message);
 		
+		// updates friends' feeds
 		AccountModel friend;
-		Iterator<AccountModel> iterator = friends.iterator();
-		while (iterator.hasNext()) {
-			friend = iterator.next();
-			friend.getFeed().post(this, message);
+		Iterator<AccountModel> friendsIterator = friends.iterator();
+		while (friendsIterator.hasNext()) {
+			friend = friendsIterator.next();
+			friend.friendPost(this, message);
 		}
+		
+		// notifies AccountObservers (OwnProfileController and FriendProfileController)
+		WallObserver observer;
+		Iterator<WallObserver> observersIterator = wallObs.iterator();
+		while (observersIterator.hasNext()) {
+			observer = observersIterator.next();
+			observer.updateWall(message);
+		}
+	}
+	
+	public void friendPost(AccountModel friend, String message) {
+		String text = friend.getName() + ": " + message;
+		
+		feed.post(text);
+		
+		NewsFeedObserver observer;
+		Iterator<NewsFeedObserver> observersIterator = feedObs.iterator();
+		while (observersIterator.hasNext()) {
+			observer = observersIterator.next();
+			observer.updateFeed(text);
+		}
+	}
+	
+	/**
+	 * Saves the state of the AccountModel for comparison and possible recovery
+	 * List of friends, wall info, and news feed stored as separate text files
+	 */
+	public void saveState() {
+		
 	}
 }

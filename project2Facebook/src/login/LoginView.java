@@ -1,6 +1,6 @@
 package login;
 
-import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
@@ -18,7 +18,7 @@ public class LoginView extends JFrame{
 	
 	public LoginView () {
 		JPanel content = new JPanel();
-		content.setLayout(new FlowLayout());
+		content.setLayout(new GridLayout(0,2));
 		content.add(new JLabel("Username"));
 		content.add(usernameTf);
 		content.add(new JLabel("Password"));
@@ -48,7 +48,6 @@ public class LoginView extends JFrame{
 	
 	public void showError(String errMessage) {
 		JOptionPane.showMessageDialog(this, errMessage);
-		passwordTf.setText("");
 	}
 
 }
