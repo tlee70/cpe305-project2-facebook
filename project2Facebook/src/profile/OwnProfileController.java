@@ -23,6 +23,7 @@ public class OwnProfileController implements PictureObserver, WallObserver, News
 		op_view.addSettingsListener(new SettingsListener());
 		op_view.addLogoutListener(new LogoutListener());
 		op_view.addWallListener(new MessagePostListener());
+		op_view.setFriendsList(acc_model.getFriends());
 		
 		op_view.setVisible(true);
 	}
