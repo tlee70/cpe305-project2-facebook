@@ -3,7 +3,6 @@ package profile;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.awt.Dimension;
 import java.awt.Font;
 
@@ -13,19 +12,14 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JList;
-import javax.swing.ListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
-import javax.imageio.ImageIO;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
 
@@ -144,26 +138,6 @@ public class OwnProfileView extends JFrame {
 		friends.addListSelectionListener(fal);
 	}
 	
-	public Image selectPicture() {
-		JFileChooser fc = new JFileChooser();
-		fc.setCurrentDirectory(new File("~/sbh"));
-		int result = fc.showOpenDialog(new JFrame());
-		
-		if (result == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fc.getSelectedFile();
-			try {
-				Image image = ImageIO.read(selectedFile);
-				return image;
-			}
-			catch (IOException exception) {
-				System.out.println(exception.getStackTrace());
-			}
-		}
-		
-		showMessage("Error in select new profile picture");
-		return null;
-	}
-	
 	public String getPost() {
 		String post = wallField.getText();
 		wallField.setText("");
@@ -189,5 +163,9 @@ public class OwnProfileView extends JFrame {
 	
 	public void showMessage(String message) {
 		JOptionPane.showMessageDialog(this, message);
+	}
+	
+	public void simulateFriendWall() {
+		//JOptionPane
 	}
 }

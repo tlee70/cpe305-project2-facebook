@@ -1,6 +1,13 @@
 package profile;
 
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 import java.awt.event.ActionEvent;
 import java.awt.Image;
 
@@ -51,7 +58,7 @@ public class OwnProfileController implements PictureObserver, WallObserver, News
 	class SettingsListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			// Required: Change profile pic
-			acc_model.setPicture(op_view.selectPicture());
+			acc_model.setPicture(selectPicture());
 			
 			/** Optional:
 			 * Change username
@@ -59,6 +66,26 @@ public class OwnProfileController implements PictureObserver, WallObserver, News
 			 * Deactivate account
 			 */
 		}
+	}
+	
+	public Image selectPicture() {
+		JFileChooser fc = new JFileChooser();
+		fc.setCurrentDirectory(new File("~/sbh"));
+		int result = fc.showOpenDialog(new JFrame());
+		
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = fc.getSelectedFile();
+			try {
+				Image image = ImageIO.read(selectedFile);
+				return image;
+			}
+			catch (IOException exception) {
+				System.out.println(exception.getStackTrace());
+			}
+		}
+		
+		op_view.showMessage("Error in select new profile picture");
+		return null;
 	}
 	
 	class LogoutListener implements ActionListener {
