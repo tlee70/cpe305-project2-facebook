@@ -1,6 +1,8 @@
 package profile;
 
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
 import java.awt.Image;
 import java.awt.Dimension;
@@ -61,10 +63,27 @@ public class OwnProfileView extends JFrame {
 		scrollWall.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollWall.setPreferredSize(WALL_SIZE);
 		JPanel wallContent = new JPanel();
-		wallContent.setLayout(new FlowLayout());
-		wallContent.add(wallField);
-		wallContent.add(postBtn);
-		wallContent.add(scrollWall);
+		wallContent.setLayout(new GridBagLayout());
+		GridBagConstraints wallC = new GridBagConstraints();
+		wallC.gridx = 0;
+		wallC.gridy = 0;
+		wallC.fill = GridBagConstraints.HORIZONTAL;
+		wallC.weightx = 1.0;
+		wallC.weighty = 0;
+		wallContent.add(wallField, wallC);
+		GridBagConstraints postC = new GridBagConstraints();
+		postC.gridx = 1;
+		postC.gridy = 0;
+		postC.weightx = 0.0;
+		wallContent.add(postBtn, postC);
+		GridBagConstraints scrollWallC = new GridBagConstraints();
+		scrollWallC.gridx = 0;
+		scrollWallC.gridy = 1;
+		scrollWallC.gridwidth = 2;
+		scrollWallC.fill = GridBagConstraints.HORIZONTAL;
+		scrollWallC.weightx = 1.0;
+		scrollWallC.weighty = 1.0;
+		wallContent.add(scrollWall, scrollWallC);
 		
 		feed = new JTextArea(); 
 		feed.setEditable(false);
