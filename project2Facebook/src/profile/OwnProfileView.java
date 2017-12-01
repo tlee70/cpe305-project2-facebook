@@ -1,6 +1,5 @@
 package profile;
 
-import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
@@ -21,116 +20,148 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
+import javax.swing.BoxLayout;
 
 import java.util.List;
 import java.util.Iterator;
 
 public class OwnProfileView extends JFrame {
 	
-	private static final int PICTURE_WIDTH = 200;
-	private static final int PICTURE_HEIGHT = 200;
-	private static final Dimension WALL_SIZE = new Dimension(300,300);
-	private static final Dimension FEED_SIZE = new Dimension(300,300);
-	private static final Dimension FRIENDS_SIZE = new Dimension(150,300);
+	private static final int PICTURE_WIDTH = 150;
+	private static final int PICTURE_HEIGHT = 150;
+	private static final Dimension WALL_SIZE = new Dimension(100,150);
+	private static final Dimension FEED_SIZE = new Dimension(100,150);
+	private static final Dimension FRIENDS_SIZE = new Dimension(150,200);
 	
+	private JPanel content;
 	private JLabel namePicLbl;
-	private JTextArea wall;
+	private JTextArea wallArea;
 	private JTextField wallField = new JTextField(20);
 	private JButton postBtn = new JButton("Post");
-	private JTextArea feed;
-	private JList<AccountModel> friends;
+	private JTextArea feedArea;
+	private JList<AccountModel> friendsJList;
 	private JButton settingsBtn = new JButton("Settings");
 	private JButton logoutBtn = new JButton("Logout");
 	// private JComboBox searchBox;
 	
 	public OwnProfileView() {
+		content = new JPanel();
+		content.setLayout(new GridBagLayout());
+		displayNamePicLbl();
+		displayButtons();
+		displayWall();
+		displayFeed();
+		displayFriends();
+		
+		this.setContentPane(content);
+		this.pack();
+		
+		this.setTitle("Facebook");
+		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	private void displayNamePicLbl() {
 		namePicLbl = new JLabel("placeholder name", null, JLabel.CENTER);
 		namePicLbl.setFont(new Font("Serif", Font.PLAIN, 20));
 		namePicLbl.setHorizontalTextPosition(JLabel.CENTER);
 		namePicLbl.setVerticalTextPosition(JLabel.BOTTOM);
 		namePicLbl.setPreferredSize(new Dimension(PICTURE_WIDTH, PICTURE_HEIGHT+50));
 		
-		JPanel buttonContent = new JPanel();
-		buttonContent.setLayout(new FlowLayout());
-		buttonContent.add(settingsBtn);
-		buttonContent.add(logoutBtn);
+		GridBagConstraints labelConstraints = new GridBagConstraints();
+		labelConstraints.gridx = 0;
+		labelConstraints.gridy = 0;
+		labelConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		labelConstraints.fill = GridBagConstraints.BOTH;
+		labelConstraints.gridheight = 2;
+		labelConstraints.weightx = 0;
+		labelConstraints.weighty = 0;
+		content.add(namePicLbl, labelConstraints);
+	}
+	
+	private void displayButtons() {
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
+		buttonPanel.add(settingsBtn);
+		buttonPanel.add(logoutBtn);
 		
-		wall = new JTextArea();
-		wall.setEditable(false);
-		wall.setLineWrap(true);
-		wall.setWrapStyleWord(true);
-		JScrollPane scrollWall = new JScrollPane(wall); 
+		GridBagConstraints buttonConstraints = new GridBagConstraints();
+		buttonConstraints.gridx = 2;
+		buttonConstraints.gridy = 0;
+		buttonConstraints.anchor = GridBagConstraints.FIRST_LINE_END;
+		buttonConstraints.weightx = 0;
+		buttonConstraints.weighty = 0;
+		content.add(buttonPanel, buttonConstraints);
+	}
+	
+	private void displayWall() {
+		wallArea = new JTextArea();
+		wallArea.setEditable(false);
+		wallArea.setLineWrap(true);
+		wallArea.setWrapStyleWord(true);
+		
+		JScrollPane scrollWall = new JScrollPane(wallArea); 
 		scrollWall.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollWall.setPreferredSize(WALL_SIZE);
-		JPanel wallContent = new JPanel();
-		wallContent.setLayout(new GridBagLayout());
-		GridBagConstraints wallFieldC = new GridBagConstraints();
-		wallFieldC.gridx = 0;
-		wallFieldC.gridy = 0;
-		wallFieldC.fill = GridBagConstraints.HORIZONTAL;
-		wallFieldC.weightx = 1.0;
-		wallFieldC.weighty = 0;
-		wallContent.add(wallField, wallFieldC);
-		GridBagConstraints postC = new GridBagConstraints();
-		postC.gridx = 1;
-		postC.gridy = 0;
-		postC.weightx = 0.0;
-		wallContent.add(postBtn, postC);
-		GridBagConstraints scrollWallC = new GridBagConstraints();
-		scrollWallC.gridx = 0;
-		scrollWallC.gridy = 1;
-		scrollWallC.gridwidth = 2;
-		scrollWallC.fill = GridBagConstraints.BOTH;
-		scrollWallC.weightx = 1.0;
-		scrollWallC.weighty = 1.0;
-		wallContent.add(scrollWall, scrollWallC);
 		
-		feed = new JTextArea(); 
-		feed.setEditable(false);
-		feed.setLineWrap(true);
-		feed.setWrapStyleWord(true);
-		JScrollPane scrollFeed = new JScrollPane(feed);
+		
+		JPanel wallPanel = new JPanel();
+		wallPanel.setLayout(new GridBagLayout());
+		
+		GridBagConstraints wallFieldConstraints = new GridBagConstraints();
+		wallFieldConstraints.gridx = 0;
+		wallFieldConstraints.gridy = 0;
+		wallFieldConstraints.fill = GridBagConstraints.HORIZONTAL;
+		wallFieldConstraints.weightx = 1.0;
+		wallFieldConstraints.weighty = 0;
+		wallPanel.add(wallField, wallFieldConstraints);
+		
+		GridBagConstraints postBtnConstraints = new GridBagConstraints();
+		postBtnConstraints.gridx = 1;
+		postBtnConstraints.gridy = 0;
+		postBtnConstraints.weightx = 0.0;
+		wallPanel.add(postBtn, postBtnConstraints);
+		
+		GridBagConstraints scrollWallConstraints = new GridBagConstraints();
+		scrollWallConstraints.gridx = 0;
+		scrollWallConstraints.gridy = 1;
+		scrollWallConstraints.gridwidth = 2;
+		scrollWallConstraints.fill = GridBagConstraints.BOTH;
+		scrollWallConstraints.weightx = 1.0;
+		scrollWallConstraints.weighty = 1.0;
+		wallPanel.add(scrollWall, scrollWallConstraints);
+		
+		
+		GridBagConstraints wallConstraints = new GridBagConstraints();
+		wallConstraints.gridx = 1;
+		wallConstraints.gridy = 1;
+		wallConstraints.gridwidth = 2;
+		wallConstraints.gridheight = 3;
+		wallConstraints.anchor = GridBagConstraints.PAGE_START;
+		wallConstraints.fill = GridBagConstraints.BOTH;
+		wallConstraints.weightx = 1.0;
+		wallConstraints.weighty = 1.0;
+		content.add(wallPanel, wallConstraints);
+	}
+	
+	private void displayFeed() {
+		feedArea = new JTextArea(); 
+		feedArea.setEditable(false);
+		feedArea.setLineWrap(true);
+		feedArea.setWrapStyleWord(true);
+		JScrollPane scrollFeed = new JScrollPane(feedArea);
 		scrollFeed.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollFeed.setPreferredSize(FEED_SIZE);
 		
-		friends = new JList<AccountModel>();
-		friends.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		friends.setLayoutOrientation(JList.VERTICAL);
-		friends.setVisibleRowCount(-1);
-		JScrollPane scrollFriends = new JScrollPane(friends);
-		scrollFeed.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollFriends.setPreferredSize(FRIENDS_SIZE);
+		JLabel feedLbl = new JLabel("News feed");
+		feedLbl.setFont(new Font("Serif", Font.PLAIN, 16));
+		feedLbl.setHorizontalTextPosition(JLabel.CENTER);
 		
-		// Search box?
+		JPanel feedPanel = new JPanel();
+		feedPanel.setLayout(new BoxLayout(feedPanel, BoxLayout.PAGE_AXIS));
+		feedPanel.add(feedLbl);
+		feedPanel.add(scrollFeed);
 		
-		JPanel content = new JPanel();
-		content.setLayout(new GridBagLayout());
-		GridBagConstraints labelC = new GridBagConstraints();
-		labelC.gridx = 0;
-		labelC.gridy = 0;
-		labelC.anchor = GridBagConstraints.FIRST_LINE_START;
-		labelC.fill = GridBagConstraints.BOTH;
-		labelC.gridheight = 2;
-		labelC.weightx = 0;
-		labelC.weighty = 0;
-		content.add(namePicLbl, labelC);
-		GridBagConstraints buttonC = new GridBagConstraints();
-		buttonC.gridx = 2;
-		buttonC.gridy = 0;
-		buttonC.anchor = GridBagConstraints.FIRST_LINE_END;
-		buttonC.weightx = 0;
-		buttonC.weighty = 0;
-		content.add(buttonContent, buttonC);
-		GridBagConstraints wallC = new GridBagConstraints();
-		wallC.gridx = 1;
-		wallC.gridy = 1;
-		wallC.gridwidth = 2;
-		wallC.gridheight = 3;
-		wallC.anchor = GridBagConstraints.PAGE_START;
-		wallC.fill = GridBagConstraints.BOTH;
-		wallC.weightx = 1.0;
-		wallC.weighty = 1.0;
-		content.add(wallContent, wallC);
 		GridBagConstraints feedC = new GridBagConstraints();
 		feedC.gridx = 1;
 		feedC.gridy = 4;
@@ -139,7 +170,18 @@ public class OwnProfileView extends JFrame {
 		feedC.anchor = GridBagConstraints.PAGE_START;
 		feedC.fill = GridBagConstraints.BOTH;
 		feedC.weighty = 0.5;
-		content.add(scrollFeed, feedC);
+		content.add(feedPanel, feedC);
+	}
+	
+	private void displayFriends() {
+		friendsJList = new JList<AccountModel>();
+		friendsJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		friendsJList.setLayoutOrientation(JList.VERTICAL);
+		friendsJList.setVisibleRowCount(-1);
+		JScrollPane scrollFriends = new JScrollPane(friendsJList);
+		scrollFriends.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollFriends.setPreferredSize(FRIENDS_SIZE);
+		
 		GridBagConstraints friendsC = new GridBagConstraints();
 		friendsC.gridx = 0;
 		friendsC.gridy = 3;
@@ -149,13 +191,6 @@ public class OwnProfileView extends JFrame {
 		friendsC.fill = GridBagConstraints.BOTH;
 		friendsC.weighty = 0.5;
 		content.add(scrollFriends, friendsC);
-		
-		this.setContentPane(content);
-		this.pack();
-		
-		this.setTitle("Facebook");
-		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public void setProfileName(String name) {
@@ -170,7 +205,7 @@ public class OwnProfileView extends JFrame {
 	
 	public void setFriendsList(List<AccountModel> friendsList) {
 		DefaultListModel<AccountModel> friendsListModel = new DefaultListModel<AccountModel>();
-		friends.setModel(friendsListModel);
+		friendsJList.setModel(friendsListModel);
 		
 		Iterator<AccountModel> iterator = friendsList.iterator();
 		while (iterator.hasNext()) {
@@ -193,7 +228,7 @@ public class OwnProfileView extends JFrame {
 	}
 	
 	public void addFriendsListener(ListSelectionListener fal) {
-		friends.addListSelectionListener(fal);
+		friendsJList.addListSelectionListener(fal);
 	}
 	
 	public String getPost() {
@@ -204,19 +239,19 @@ public class OwnProfileView extends JFrame {
 	}
 	
 	public void setWall(String text) {
-		wall.setText(text);
+		wallArea.setText(text);
 	}
 	
 	public void appendWall(String text) {
-		wall.append(text + "\n");
+		wallArea.append(text + "\n");
 	}
 	
 	public void setFeed(String text) {
-		feed.setText(text);
+		feedArea.setText(text);
 	}
 	
 	public void appendFeed(String text) {
-		feed.append(text + "\n");
+		feedArea.append(text + "\n");
 	}
 	
 	public void showMessage(String message) {
