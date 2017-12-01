@@ -42,6 +42,7 @@ public class OwnProfileView extends JFrame {
 	private JList<AccountModel> friendsJList;
 	private JButton settingsBtn = new JButton("Settings");
 	private JButton logoutBtn = new JButton("Logout");
+	private JButton friendPostBtn = new JButton("Friend Post");
 	// private JComboBox searchBox;
 	
 	public OwnProfileView() {
@@ -52,6 +53,7 @@ public class OwnProfileView extends JFrame {
 		displayWall();
 		displayFeed();
 		displayFriends();
+		displayFriendPostBtn();
 		
 		this.setContentPane(content);
 		this.pack();
@@ -59,6 +61,7 @@ public class OwnProfileView extends JFrame {
 		this.setTitle("Facebook");
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	}
 	
 	private void displayNamePicLbl() {
@@ -193,6 +196,16 @@ public class OwnProfileView extends JFrame {
 		content.add(scrollFriends, friendsC);
 	}
 	
+	private void displayFriendPostBtn() {
+		GridBagConstraints buttonConstraints = new GridBagConstraints();
+		buttonConstraints.gridx = 0;
+		buttonConstraints.gridy = 2;
+		buttonConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		buttonConstraints.weightx = 0;
+		buttonConstraints.weighty = 0;
+		content.add(friendPostBtn, buttonConstraints);
+	}
+	
 	public void setProfileName(String name) {
 		namePicLbl.setText(name);
 	}
@@ -231,6 +244,10 @@ public class OwnProfileView extends JFrame {
 		friendsJList.addListSelectionListener(fal);
 	}
 	
+	public void addFriendPostListener(ActionListener fpal) {
+		friendPostBtn.addActionListener(fpal);
+	}
+	
 	public String getPost() {
 		String post = wallField.getText();
 		wallField.setText("");
@@ -258,7 +275,15 @@ public class OwnProfileView extends JFrame {
 		JOptionPane.showMessageDialog(this, message);
 	}
 	
-	public void simulateFriendWall() {
-		//JOptionPane
+	public String simulateFriendPost() {
+		String s = JOptionPane.showInputDialog(this, "Post as a friend");
+
+		//If a string was returned, say so.
+		if ((s != null) && (s.length() > 0)) {
+			return s;
+		}
+		else {
+			return "";
+		}
 	}
 }

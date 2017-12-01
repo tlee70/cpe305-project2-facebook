@@ -90,7 +90,7 @@ public class AccountModel {
 			friend.friendPost(this, message);
 		}
 		
-		// notifies AccountObservers (OwnProfileController and FriendProfileController)
+		// notifies WallObservers (OwnProfileController and FriendProfileController)
 		WallObserver observer;
 		Iterator<WallObserver> observersIterator = wallObs.iterator();
 		while (observersIterator.hasNext()) {
@@ -100,7 +100,8 @@ public class AccountModel {
 	}
 	
 	public void friendPost(AccountModel friend, String message) {
-		String text = friend.getName() + ": " + message;
+		//String text = friend.getName() + ": " + message;
+		String text = message;
 		
 		feed.post(text);
 		
@@ -111,6 +112,7 @@ public class AccountModel {
 			observer.updateFeed(text);
 		}
 	}
+
 	
 	/**
 	 * Saves the state of the AccountModel for comparison and possible recovery

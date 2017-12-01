@@ -30,6 +30,7 @@ public class OwnProfileController implements PictureObserver, WallObserver, News
 		op_view.addSettingsListener(new SettingsListener());
 		op_view.addLogoutListener(new LogoutListener());
 		op_view.addWallListener(new MessagePostListener());
+		op_view.addFriendPostListener(new FriendPostListener());
 		op_view.setFriendsList(acc_model.getFriends());
 		
 		op_view.setVisible(true);
@@ -65,6 +66,14 @@ public class OwnProfileController implements PictureObserver, WallObserver, News
 			 * Change password
 			 * Deactivate account
 			 */
+		}
+	}
+	
+	class FriendPostListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			String message = op_view.simulateFriendPost();
+			
+			acc_model.friendPost(null,message);
 		}
 	}
 	
