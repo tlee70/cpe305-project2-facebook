@@ -185,15 +185,15 @@ public class OwnProfileView extends JFrame {
 		scrollFriends.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollFriends.setPreferredSize(FRIENDS_SIZE);
 		
-		GridBagConstraints friendsC = new GridBagConstraints();
-		friendsC.gridx = 0;
-		friendsC.gridy = 3;
-		friendsC.gridwidth = 1;
-		friendsC.gridheight = 2;
-		friendsC.anchor = GridBagConstraints.FIRST_LINE_START;
-		friendsC.fill = GridBagConstraints.BOTH;
-		friendsC.weighty = 0.5;
-		content.add(scrollFriends, friendsC);
+		GridBagConstraints friendsConstraints = new GridBagConstraints();
+		friendsConstraints.gridx = 0;
+		friendsConstraints.gridy = 3;
+		friendsConstraints.gridwidth = 1;
+		friendsConstraints.gridheight = 2;
+		friendsConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		friendsConstraints.fill = GridBagConstraints.BOTH;
+		friendsConstraints.weighty = 0.5;
+		content.add(scrollFriends, friendsConstraints);
 	}
 	
 	private void displayFriendPostBtn() {
@@ -275,15 +275,27 @@ public class OwnProfileView extends JFrame {
 		JOptionPane.showMessageDialog(this, message);
 	}
 	
-	public String simulateFriendPost() {
-		String s = JOptionPane.showInputDialog(this, "Post as a friend");
-
-		//If a string was returned, say so.
-		if ((s != null) && (s.length() > 0)) {
-			return s;
-		}
-		else {
-			return "";
-		}
+	public Object[] simulateFriendPost() {
+		JScrollPane scrollFriends = new JScrollPane(friendsJList);
+		scrollFriends.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollFriends.setPreferredSize(new Dimension(100,75));
+		JTextField field = new JTextField();
+		
+		Object[] message = {scrollFriends, field};
+		
+		int option = JOptionPane.showConfirmDialog(this, message, "Post as a friend", JOptionPane.OK_CANCEL_OPTION);
+		
+		if (option == JOptionPane.OK_OPTION) {
+		    String text = field.getText();
+		    if (text != null && text.length() > 0 ) {
+		    	AccountModel friend = friendsJList.getSelectedValue();
+		    	if (friend != null) {
+		    		Object[] values = {friend, text};
+		    		return values;
+		    	}
+		    }	
+		} 
+		
+		return null;
 	}
 }

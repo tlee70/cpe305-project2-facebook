@@ -63,8 +63,17 @@ public class AccountModel {
 		return friends;
 	}
 	
-	public void addFriend(AccountModel account) {
-		friends.add(account);
+	public void addFriend(AccountModel friend) {
+		friends.add(friend);
+		
+		if ( !friend.getFriends().contains(this) ) {
+			friend.addFriend(this);
+		}
+	}
+	
+	public void removeFriend(AccountModel friend) {
+		friends.remove(friend);
+		friend.removeFriend(this);
 	}
 	
 	public void addWallObserver(WallObserver observer) {
@@ -100,8 +109,8 @@ public class AccountModel {
 	}
 	
 	public void friendPost(AccountModel friend, String message) {
-		//String text = friend.getName() + ": " + message;
-		String text = message;
+		String text = friend.getName() + ": " + message;
+		//String text = message;
 		
 		feed.post(text);
 		

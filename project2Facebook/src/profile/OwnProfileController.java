@@ -71,9 +71,14 @@ public class OwnProfileController implements PictureObserver, WallObserver, News
 	
 	class FriendPostListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			String message = op_view.simulateFriendPost();
+			Object[] values = op_view.simulateFriendPost();
 			
-			acc_model.friendPost(null,message);
+			if (values != null) {
+				AccountModel friend = (AccountModel) values[0];
+				String message = (String) values[1];
+				
+				friend.post(message);
+			}
 		}
 	}
 	
@@ -99,10 +104,6 @@ public class OwnProfileController implements PictureObserver, WallObserver, News
 	
 	class LogoutListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			// ~~Hide or dispose all ProfileViews~~
-			//~~ make visible or create new LoginView~~
-			
-			// Provide informative message and terminate 
 			acc_model.saveState();
 			op_view.showMessage("Logging you out");
 			System.exit(0);
