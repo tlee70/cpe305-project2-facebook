@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -13,7 +14,7 @@ import javax.swing.JOptionPane;
 public class LoginView extends JFrame{
 	
 	private JTextField usernameTf = new JTextField(15);
-	private JTextField passwordTf = new JTextField(20);
+	private JPasswordField passwordTf = new JPasswordField(20);
 	private JButton enterBtn = new JButton("Enter");
 	
 	public LoginView () {
