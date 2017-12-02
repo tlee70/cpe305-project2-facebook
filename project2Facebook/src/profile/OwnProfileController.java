@@ -2,16 +2,13 @@ package profile;
 
 import login.LoginModel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -29,12 +26,15 @@ public class OwnProfileController implements PictureObserver,
 
 	private OwnProfileView op_view;
 	private AccountModel acc_model;
-	private Map<LoginModel, AccountModel> database;
+	//private Map<LoginModel, AccountModel> database;
+	private LoginModel login_model;
+	//private List<AccountModel> accounts;
 	
-	public OwnProfileController(OwnProfileView op_view, AccountModel acc_model, Map<LoginModel, AccountModel> database) {
+	public OwnProfileController(OwnProfileView op_view, AccountModel acc_model, LoginModel login_model, List<AccountModel> accounts) {
+	//public OwnProfileController(OwnProfileView op_view, AccountModel acc_model, Map<LoginModel, AccountModel> database) {
 		this.op_view = op_view;
 		this.acc_model = acc_model;
-		this.database = database;
+		//this.database = database;
 		
 		acc_model.addPicObserver(this);
 		acc_model.addWallObserver(this);
@@ -42,14 +42,16 @@ public class OwnProfileController implements PictureObserver,
 		acc_model.addFriendsListObserver(this);
 		
 		// Prevents own account from showing in search bar
-		List<AccountModel> allAccounts = new ArrayList(database.values());
-		allAccounts.remove(acc_model);
-		AccountModel[] accounts = (AccountModel[])allAccounts.toArray(new AccountModel[allAccounts.size()]);
+		//List<AccountModel> allAccounts = new ArrayList<AccountModel>(database.values());
+		this.login_model = login_model;
+		//this.accounts = accounts;
+		accounts.remove(acc_model);
+		AccountModel[] accountsArr = (AccountModel[])accounts.toArray(new AccountModel[accounts.size()]);
 		
 		op_view.setProfileName(acc_model.getName());
 		op_view.setProfilePic(acc_model.getPicture());
 		op_view.setFriendsList(acc_model.getFriends());
-		op_view.setAllAccounts(accounts);
+		op_view.setAllAccounts(accountsArr);
 		
 		op_view.addSettingsListener(new SettingsListener());
 		op_view.addLogoutListener(new LogoutListener());
@@ -89,7 +91,7 @@ public class OwnProfileController implements PictureObserver,
 	public Image selectPicture() {
 		JFileChooser fc = new JFileChooser();
 		fc.setCurrentDirectory(new File("~/sbh"));
-		int result = fc.showOpenDialog(new JFrame());
+		int result = fc.showOpenDialog(op_view);
 		
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fc.getSelectedFile();
@@ -101,8 +103,10 @@ public class OwnProfileController implements PictureObserver,
 				System.out.println(exception.getStackTrace());
 			}
 		}
+		else if (result == JFileChooser.CANCEL_OPTION) {
+			System.out.println("Image selection canceled");
+		}
 		
-		op_view.showMessage("Error in select new profile picture");
 		return null;
 	}
 	
@@ -116,14 +120,25 @@ public class OwnProfileController implements PictureObserver,
 	
 	class SettingsListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			// Required: Change profile pic
-			acc_model.setPicture(selectPicture());
+			String[] options = new String[] {"Username", "Password", "Profile Picture", "Deactivate Account", "Cancel"};
+		    int response = JOptionPane.showOptionDialog(op_view, "Select an option to change", "Settings",
+		        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+		        null, options, options[4]);
+		    
+		    if (response == 0) {
+		    	String username = JOptionPane.showInputDialog(op_view, "Set new username", login_model.getUsername());
+		    	if (username != null)
+		    		login_model.setUsername(username);
+		    } else if (response == 1) {
+		    	String password = JOptionPane.showInputDialog(op_view, "Set new password", login_model.getPassword());
+		    	if (password != null)
+		    		login_model.setPassword(password);
+		    } else if (response == 2) {
+		    	acc_model.setPicture(selectPicture());
+		    } else if (response == 3) {
+		    	// Deactivate account
+		    }
 			
-			/** Optional:
-			 * Change username
-			 * Change password
-			 * Deactivate account
-			 */
 		}
 	}
 	

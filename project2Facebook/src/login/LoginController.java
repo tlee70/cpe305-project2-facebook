@@ -28,8 +28,10 @@ public class LoginController {
 			
 			if (accounts.containsKey(attemptedLogin)) {
 				li_view.dispose();
-				new OwnProfileController(new OwnProfileView(), accounts.get(attemptedLogin), 
-						accounts);
+				// new OwnProfileController(new OwnProfileView(), accounts.get(attemptedLogin), 
+				//		accounts);
+					new OwnProfileController(new OwnProfileView(), accounts.get(attemptedLogin), 
+								attemptedLogin, new ArrayList<AccountModel>(accounts.values()));
 			}
 			else {
 				li_view.showError("Incorrect login information");

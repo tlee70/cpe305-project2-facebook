@@ -9,7 +9,6 @@ import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -26,35 +25,24 @@ import javax.swing.BoxLayout;
 import java.util.List;
 import java.util.Iterator;
 
-public class OwnProfileView extends JFrame {
-	
-	private static final int PICTURE_WIDTH = 150;
-	private static final int PICTURE_HEIGHT = 150;
-	private static final Dimension WALL_SIZE = new Dimension(100,150);
+public class OwnProfileView extends AbstractProfileView {
+
 	private static final Dimension FEED_SIZE = new Dimension(100,150);
 	private static final Dimension FRIENDS_SIZE = new Dimension(150,200);
 	
-	private JPanel content;
-	private JLabel namePicLbl;
-	private JComboBox<AccountModel> searchBar;
 	private DefaultComboBoxModel<AccountModel> friendsModel;
 	private JTextArea wallArea;
 	private JTextField wallField = new JTextField(20);
 	private JButton postBtn = new JButton("Post");
 	private JTextArea feedArea;
 	private JList<AccountModel> friendsJList;
-	private JButton settingsBtn = new JButton("Settings");
-	private JButton logoutBtn = new JButton("Logout");
 	private JButton friendPostBtn = new JButton("Friend Post");
 	
 	public OwnProfileView() {
-		friendsModel = new DefaultComboBoxModel();
+		super();
 		
-		content = new JPanel();
-		content.setLayout(new GridBagLayout());
-		displayNamePicLbl();
-		displaySearchBar();
-		displayButtons();
+		friendsModel = new DefaultComboBoxModel<AccountModel>();
+
 		displayWall();
 		displayFeed();
 		displayFriends();
@@ -66,52 +54,6 @@ public class OwnProfileView extends JFrame {
 		this.setTitle("Facebook");
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-	
-	private void displayNamePicLbl() {
-		namePicLbl = new JLabel("placeholder name", null, JLabel.CENTER);
-		namePicLbl.setFont(new Font("Serif", Font.PLAIN, 20));
-		namePicLbl.setHorizontalTextPosition(JLabel.CENTER);
-		namePicLbl.setVerticalTextPosition(JLabel.BOTTOM);
-		namePicLbl.setPreferredSize(new Dimension(PICTURE_WIDTH, PICTURE_HEIGHT+50));
-		
-		GridBagConstraints labelConstraints = new GridBagConstraints();
-		labelConstraints.gridx = 0;
-		labelConstraints.gridy = 0;
-		labelConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
-		labelConstraints.fill = GridBagConstraints.BOTH;
-		labelConstraints.gridheight = 2;
-		labelConstraints.weightx = 0;
-		labelConstraints.weighty = 0;
-		content.add(namePicLbl, labelConstraints);
-	}
-	
-	private void displaySearchBar() {
-		searchBar = new JComboBox<AccountModel>();
-		searchBar.setEditable(false);
-		
-		GridBagConstraints searchBarConstraints = new GridBagConstraints();
-		searchBarConstraints.gridx = 1;
-		searchBarConstraints.gridy = 0;
-		searchBarConstraints.anchor = GridBagConstraints.FIRST_LINE_END;
-		searchBarConstraints.weightx = 0;
-		searchBarConstraints.weighty = 0;
-		content.add(searchBar, searchBarConstraints);
-	}
-	
-	private void displayButtons() {
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
-		buttonPanel.add(settingsBtn);
-		buttonPanel.add(logoutBtn);
-		
-		GridBagConstraints buttonConstraints = new GridBagConstraints();
-		buttonConstraints.gridx = 2;
-		buttonConstraints.gridy = 0;
-		buttonConstraints.anchor = GridBagConstraints.FIRST_LINE_END;
-		buttonConstraints.weightx = 0;
-		buttonConstraints.weighty = 0;
-		content.add(buttonPanel, buttonConstraints);
 	}
 	
 	private void displayWall() {
@@ -223,36 +165,11 @@ public class OwnProfileView extends JFrame {
 		content.add(friendPostBtn, buttonConstraints);
 	}
 	
-	public void setProfileName(String name) {
-		namePicLbl.setText(name);
-	}
-	
-	public void setProfilePic(Image image) {
-		Image dimg = image.getScaledInstance(PICTURE_WIDTH, PICTURE_HEIGHT, Image.SCALE_SMOOTH);
-		namePicLbl.setIcon(new ImageIcon(dimg));
-	}
-	
 	public void setFriendsList(List<AccountModel> friendsList) {
 		Iterator<AccountModel> iterator = friendsList.iterator();
 		while (iterator.hasNext()) {
 			friendsModel.addElement(iterator.next());
 		}
-	}
-	
-	public void setAllAccounts(AccountModel[] accounts) {
-		searchBar.setModel(new DefaultComboBoxModel<AccountModel>(accounts));
-	}
-	
-	public void addSearchListener(ActionListener listener) {
-		searchBar.addActionListener(listener);
-	}
-	
-	public void addSettingsListener(ActionListener listener) {
-		settingsBtn.addActionListener(listener);
-	}
-
-	public void addLogoutListener(ActionListener listener) {
-		logoutBtn.addActionListener(listener);
 	}
 	
 	public void addWallListener(ActionListener listener) {
@@ -293,10 +210,6 @@ public class OwnProfileView extends JFrame {
 	
 	public DefaultComboBoxModel<AccountModel> getFriendsDefaultComboBoxModel() {
 		return friendsModel;
-	}
-	
-	public void showMessage(String message) {
-		JOptionPane.showMessageDialog(this, message);
 	}
 	
 }

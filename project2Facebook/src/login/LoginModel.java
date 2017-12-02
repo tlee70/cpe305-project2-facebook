@@ -21,6 +21,10 @@ public class LoginModel {
 		this.password = password;
 	}
 	
+	public String getPassword() {
+		return password;
+	}
+	
 	public boolean verify(String username, String password) {
 		if (!this.username.equals(username))
 			return false;

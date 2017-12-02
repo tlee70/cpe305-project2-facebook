@@ -56,7 +56,7 @@ public class AccountModel {
 		Iterator<PictureObserver> observersIterator = picObs.iterator();
 		while (observersIterator.hasNext()) {
 			observer = observersIterator.next();
-			observer.updatePic(picture);
+			observer.updatePic(this.picture);
 		}
 	}
 	
