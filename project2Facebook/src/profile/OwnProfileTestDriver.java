@@ -3,7 +3,7 @@ package profile;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -12,25 +12,30 @@ import login.LoginModel;
 public class OwnProfileTestDriver {
 	public static void main(String[] args) {
 		try {
+			ArrayList<AccountModel> accounts = new ArrayList<AccountModel>();
+			
 			Image image = ImageIO.read(new File("C:/Users/Tim/Pictures/Pics/Symbol.png"));
 			//Image image = ImageIO.read(new File("//home/tlee70/git/cpe305-project2-facebook/project2Facebook/pics/blank.png"));
 			AccountModel myAcc = new AccountModel("Tim Lee", image);
+			accounts.add(myAcc);
 		
 			AccountModel acc1 = new AccountModel("Sam Haire", image);
 			myAcc.addFriend(acc1);
+			accounts.add(acc1);
 			AccountModel acc2 = new AccountModel("Steven Meissner", image);
 			myAcc.addFriend(acc2);
+			accounts.add(acc2);
 			AccountModel acc3 = new AccountModel("Taylor Wood", image);
 			myAcc.addFriend(acc3);
+			accounts.add(acc3);
 			AccountModel acc4 = new AccountModel("Yesenia Moreno", image);
-			//myAcc.addFriend(acc4);
+			accounts.add(acc4);
 			AccountModel acc5 = new AccountModel("Caleb Barber", image);
-			//myAcc.addFriend(acc5);
+			accounts.add(acc5);
 			AccountModel acc6 = new AccountModel("Dylan Kirkby", image);
 			myAcc.addFriend(acc6);
+			accounts.add(acc6);
 
-			//HashMap<LoginModel, AccountModel> map = new HashMap<LoginModel, AccountModel>();
-			
 			LoginModel	myLogin	= new LoginModel("tlee70", "terriblePassword");
 			/**map.put(myLogin, myAcc);
 			LoginModel	login1	= new LoginModel("samHaire", "hairysam");
@@ -48,7 +53,7 @@ public class OwnProfileTestDriver {
 			
 			new OwnProfileController(new OwnProfileView(), myAcc, map);
 			*/
-			new OwnProfileController(new OwnProfileView(), myAcc, myLogin, myAcc.getFriends());
+			new OwnProfileController(new OwnProfileView(), myAcc, myLogin, accounts);
 		}
 		catch (IOException e) {
 			System.out.println(e.getStackTrace());

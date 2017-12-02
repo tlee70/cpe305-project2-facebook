@@ -60,6 +60,14 @@ public class AccountModel {
 		}
 	}
 	
+	public MessageWallModel getWall() {
+		return wall;
+	}
+	
+	public MessageWallModel getFeed() {
+		return feed;
+	}
+	
 	public List<AccountModel> getFriends() {
 		return friends;
 	}
@@ -72,7 +80,7 @@ public class AccountModel {
 			Iterator<FriendsListObserver> observersIterator = friendsListObs.iterator();
 			while (observersIterator.hasNext()) {
 				observer = observersIterator.next();
-				observer.notifyFriendRemove(friend);
+				observer.notifyFriendAdd(friend);
 			}
 		}
 		
@@ -89,7 +97,7 @@ public class AccountModel {
 			Iterator<FriendsListObserver> observersIterator = friendsListObs.iterator();
 			while (observersIterator.hasNext()) {
 				observer = observersIterator.next();
-				observer.notifyFriendAdd(friend);
+				observer.notifyFriendRemove(friend);
 			}
 		}
 		
@@ -148,7 +156,15 @@ public class AccountModel {
 		}
 	}
 
-	
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if ( !(other instanceof AccountModel) )
+			return false;
+		
+		AccountModel acc = (AccountModel)other;
+		return (acc.getName().equals(name));
+	}
 	/**
 	 * Saves the state of the AccountModel for comparison and possible recovery
 	 * List of friends, wall info, and news feed stored as separate text files

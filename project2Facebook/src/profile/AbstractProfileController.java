@@ -3,8 +3,6 @@ package profile;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,25 +18,39 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	
 	protected T view;
 	protected AccountModel myAcc_model;
+	protected AccountModel dispAcc_model;
 	protected LoginModel login_model;
+	protected List<AccountModel> accounts;
 	
-	public AbstractProfileController(T view, AccountModel myAcc_model, 
-			LoginModel login_model, List<AccountModel> accounts) {
+	public AbstractProfileController(T view, AccountModel dispAcc_model, 
+			AccountModel myAcc_model, LoginModel login_model, List<AccountModel> accounts) {
 		this.view = view;
+		this.dispAcc_model =  dispAcc_model;
 		this.myAcc_model = myAcc_model;
 		this.login_model = login_model;
+		this.accounts = accounts;
 			
 		// Prevents own account from showing in search bar
 		accounts.remove(myAcc_model);
 		AccountModel[] accountsArr = (AccountModel[])accounts.toArray(new AccountModel[accounts.size()]);
 			
-		view.setProfileName(myAcc_model.getName());
-		view.setProfilePic(myAcc_model.getPicture());
+		view.setProfileName(dispAcc_model.getName());
+		view.setProfilePic(dispAcc_model.getPicture());
 		view.setAllAccounts(accountsArr);
 			
 		view.addSettingsListener(new SettingsListener());
 		view.addLogoutListener(new LogoutListener());
 		view.addSearchListener(new SearchBarListener());
+	}
+	
+	protected void openStrangerProfile(AccountModel stranger) {
+		new StrangerProfileController(new StrangerProfileView(), stranger, myAcc_model, 
+				login_model, accounts);
+	}
+	
+	protected void openFriendProfile(AccountModel friend) {
+		new FriendProfileController(new FriendProfileView(), friend, myAcc_model, 
+				login_model, accounts);
 	}
 	
 	public Image selectPicture() {
@@ -97,8 +109,13 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 
 	class SearchBarListener implements ActionListener {  
 	 	public void actionPerformed(ActionEvent e) {
-			view.showMessage("Search functionality not yet implemented\n"
-					+ view.getSearchAccount() + " was selected");
+			AccountModel acc = view.getSearchAccount();
+			if (myAcc_model.getFriends().contains(acc)) {
+				openFriendProfile(acc);
+			}
+			else {
+				openStrangerProfile(acc);
+			}
 		}
 	}
 }

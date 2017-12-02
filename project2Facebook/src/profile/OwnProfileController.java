@@ -20,7 +20,7 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 	implements PictureObserver, WallObserver, NewsFeedObserver, FriendsListObserver {
 	
 	public OwnProfileController(OwnProfileView view, AccountModel myAcc_model, LoginModel login_model, List<AccountModel> accounts) {
-		super(view, myAcc_model, login_model, accounts);
+		super(view, myAcc_model, myAcc_model, login_model, accounts);
 
 		myAcc_model.addPicObserver(this);
 		myAcc_model.addWallObserver(this);
@@ -32,7 +32,11 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 		view.addWallListener(new MessagePostListener());
 		view.addFriendPostListener(new FriendPostListener());
 		view.addFriendsListener(new FriendsListListener());
+		
+		view.setWall(myAcc_model.getWall().toString());
+		view.setFeed(myAcc_model.getFeed().toString());
 
+		view.pack();
 		view.setVisible(true);
 	}
 	
@@ -95,7 +99,8 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 	
 	class FriendsListListener implements ListSelectionListener {  
 	 	public void valueChanged(ListSelectionEvent e) {
-	 		view.showMessage("Friend List functionality not yet implemented");
+	 		if ( !e.getValueIsAdjusting()) 
+	 			openFriendProfile(view.getFriendListSelection());
 		}
 	}
 

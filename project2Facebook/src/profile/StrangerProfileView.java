@@ -13,19 +13,18 @@ public class StrangerProfileView extends AbstractProfileView {
 		super();
 		
 		displayFollowBtn();
-		
-		this.setContentPane(content);
+
 		this.pack();
 		
 		this.setTitle("Facebook");
 		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	private void displayFollowBtn() {
 		GridBagConstraints followConstraints = new GridBagConstraints();
 		followConstraints.gridx = 0;
-		followConstraints.gridy = 1;
+		followConstraints.gridy = 2;
 		followConstraints.weightx = 0;
 		followConstraints.weighty = 0;
 		followConstraints.anchor = GridBagConstraints.PAGE_START;

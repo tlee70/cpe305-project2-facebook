@@ -44,8 +44,7 @@ public class OwnProfileView extends AbstractProfileView {
 		displayFeed();
 		displayFriends();
 		displayFriendPostBtn();
-		
-		this.setContentPane(content);
+
 		this.pack();
 		
 		this.setTitle("Facebook");
@@ -113,7 +112,7 @@ public class OwnProfileView extends AbstractProfileView {
 		scrollFeed.setPreferredSize(FEED_SIZE);
 		
 		JLabel feedLbl = new JLabel("News feed");
-		feedLbl.setFont(new Font("Serif", Font.PLAIN, 16));
+		feedLbl.setFont(new Font("Serif", Font.PLAIN, 14));
 		feedLbl.setHorizontalTextPosition(JLabel.CENTER);
 		
 		JPanel feedPanel = new JPanel();
@@ -203,6 +202,10 @@ public class OwnProfileView extends AbstractProfileView {
 	
 	public void appendFeed(String text) {
 		feedArea.append(text + "\n");
+	}
+	
+	public AccountModel getFriendListSelection() {
+		return friendsJList.getSelectedValue();
 	}
 	
 	public DefaultComboBoxModel<AccountModel> getFriendsDefaultComboBoxModel() {

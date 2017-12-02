@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -33,6 +32,7 @@ public abstract class AbstractProfileView extends JFrame {
 	public AbstractProfileView() {
 		content = new JPanel();
 		content.setLayout(new GridBagLayout());
+		this.setContentPane(content);
 		
 		displayNamePicLbl();
 		displaySearchBar();
@@ -41,7 +41,7 @@ public abstract class AbstractProfileView extends JFrame {
 	
 	private void displayNamePicLbl() {
 		namePicLbl = new JLabel("placeholder name", null, JLabel.CENTER);
-		namePicLbl.setFont(new Font("Serif", Font.PLAIN, 20));
+		namePicLbl.setFont(new Font("Serif", Font.PLAIN, 16));
 		namePicLbl.setHorizontalTextPosition(JLabel.CENTER);
 		namePicLbl.setVerticalTextPosition(JLabel.BOTTOM);
 		namePicLbl.setPreferredSize(new Dimension(PICTURE_WIDTH, PICTURE_HEIGHT+50));
