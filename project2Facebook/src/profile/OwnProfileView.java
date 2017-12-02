@@ -87,8 +87,8 @@ public class OwnProfileView extends JFrame {
 	}
 	
 	private void displaySearchBar() {
-		searchBar = new JComboBox<AccountModel>(friendsModel);
-		searchBar.setEditable(true);
+		searchBar = new JComboBox<AccountModel>();
+		searchBar.setEditable(false);
 		
 		GridBagConstraints searchBarConstraints = new GridBagConstraints();
 		searchBarConstraints.gridx = 1;
@@ -237,6 +237,10 @@ public class OwnProfileView extends JFrame {
 		while (iterator.hasNext()) {
 			friendsModel.addElement(iterator.next());
 		}
+	}
+	
+	public void setAllAccounts(AccountModel[] accounts) {
+		searchBar.setModel(new DefaultComboBoxModel<AccountModel>(accounts));
 	}
 	
 	public void addSearchListener(ActionListener listener) {

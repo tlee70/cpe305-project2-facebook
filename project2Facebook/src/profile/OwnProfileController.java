@@ -1,5 +1,10 @@
 package profile;
 
+import login.LoginModel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,20 +29,27 @@ public class OwnProfileController implements PictureObserver,
 
 	private OwnProfileView op_view;
 	private AccountModel acc_model;
+	private Map<LoginModel, AccountModel> database;
 	
-	public OwnProfileController(OwnProfileView op_view, AccountModel acc_model) {
+	public OwnProfileController(OwnProfileView op_view, AccountModel acc_model, Map<LoginModel, AccountModel> database) {
 		this.op_view = op_view;
 		this.acc_model = acc_model;
+		this.database = database;
 		
 		acc_model.addPicObserver(this);
 		acc_model.addWallObserver(this);
 		acc_model.addFeedObserver(this);
 		acc_model.addFriendsListObserver(this);
 		
+		// Prevents own account from showing in search bar
+		List<AccountModel> allAccounts = new ArrayList(database.values());
+		allAccounts.remove(acc_model);
+		AccountModel[] accounts = (AccountModel[])allAccounts.toArray(new AccountModel[allAccounts.size()]);
 		
 		op_view.setProfileName(acc_model.getName());
 		op_view.setProfilePic(acc_model.getPicture());
 		op_view.setFriendsList(acc_model.getFriends());
+		op_view.setAllAccounts(accounts);
 		
 		op_view.addSettingsListener(new SettingsListener());
 		op_view.addLogoutListener(new LogoutListener());

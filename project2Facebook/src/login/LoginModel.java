@@ -29,4 +29,20 @@ public class LoginModel {
 		
 		return true;
 	}
+	
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		if ( !(other instanceof LoginModel) ) {
+			return false;
+		}
+		
+		LoginModel otherLogin = (LoginModel)other;
+		return otherLogin.verify(this.username, this.password);
+	}
+	
+	public int hashCode() {
+		return (100*username.hashCode()) + password.hashCode();
+	}
 }
