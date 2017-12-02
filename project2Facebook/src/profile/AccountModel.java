@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
 
-
 public class AccountModel {
 	
 	private String name;
@@ -18,6 +17,7 @@ public class AccountModel {
 	private List<WallObserver> wallObs;
 	private List<PictureObserver> picObs;
 	private List<NewsFeedObserver> feedObs;
+	private List<FriendsListObserver> friendsListObs;
 	
 	public AccountModel(String name, Image picture) {
 		this.name = name;
@@ -28,6 +28,7 @@ public class AccountModel {
 		wallObs = new LinkedList<WallObserver>();
 		picObs = new LinkedList<PictureObserver>();
 		feedObs = new LinkedList<NewsFeedObserver>();
+		friendsListObs = new LinkedList<FriendsListObserver>();
 	}
 	
 	public String getName() {
@@ -64,7 +65,16 @@ public class AccountModel {
 	}
 	
 	public void addFriend(AccountModel friend) {
-		friends.add(friend);
+		if ( !friends.contains(friend) ) {
+			friends.add(friend);
+			
+			FriendsListObserver observer;
+			Iterator<FriendsListObserver> observersIterator = friendsListObs.iterator();
+			while (observersIterator.hasNext()) {
+				observer = observersIterator.next();
+				observer.notifyFriendRemove(friend);
+			}
+		}
 		
 		if ( !friend.getFriends().contains(this) ) {
 			friend.addFriend(this);
@@ -72,8 +82,20 @@ public class AccountModel {
 	}
 	
 	public void removeFriend(AccountModel friend) {
-		friends.remove(friend);
-		friend.removeFriend(this);
+		if (friends.contains(friend)) {
+			friends.remove(friend);
+			
+			FriendsListObserver observer;
+			Iterator<FriendsListObserver> observersIterator = friendsListObs.iterator();
+			while (observersIterator.hasNext()) {
+				observer = observersIterator.next();
+				observer.notifyFriendAdd(friend);
+			}
+		}
+		
+		if (friend.getFriends().contains(this)) {
+			friend.removeFriend(this);
+		}
 	}
 	
 	public void addWallObserver(WallObserver observer) {
@@ -86,6 +108,10 @@ public class AccountModel {
 	
 	public void addFeedObserver(NewsFeedObserver observer) {
 		feedObs.add(observer);
+	}
+	
+	public void addFriendsListObserver(FriendsListObserver observer) {
+		friendsListObs.add(observer);
 	}
 	
 	public void post(String message) {

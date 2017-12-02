@@ -200,7 +200,7 @@ public class OwnProfileView extends JFrame {
 		GridBagConstraints buttonConstraints = new GridBagConstraints();
 		buttonConstraints.gridx = 0;
 		buttonConstraints.gridy = 2;
-		buttonConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		buttonConstraints.anchor = GridBagConstraints.CENTER;
 		buttonConstraints.weightx = 0;
 		buttonConstraints.weighty = 0;
 		content.add(friendPostBtn, buttonConstraints);
@@ -211,8 +211,7 @@ public class OwnProfileView extends JFrame {
 	}
 	
 	public void setProfilePic(Image image) {
-		Image dimg = image.getScaledInstance(PICTURE_WIDTH, PICTURE_HEIGHT,
-				Image.SCALE_SMOOTH);
+		Image dimg = image.getScaledInstance(PICTURE_WIDTH, PICTURE_HEIGHT, Image.SCALE_SMOOTH);
 		namePicLbl.setIcon(new ImageIcon(dimg));
 	}
 	
@@ -224,7 +223,6 @@ public class OwnProfileView extends JFrame {
 		while (iterator.hasNext()) {
 			friendsListModel.addElement(iterator.next());
 		}
-		
 	}
 	
 	public void addSettingsListener(ActionListener sal) {
@@ -247,7 +245,7 @@ public class OwnProfileView extends JFrame {
 	public void addFriendPostListener(ActionListener fpal) {
 		friendPostBtn.addActionListener(fpal);
 	}
-	
+		
 	public String getPost() {
 		String post = wallField.getText();
 		wallField.setText("");
@@ -271,31 +269,12 @@ public class OwnProfileView extends JFrame {
 		feedArea.append(text + "\n");
 	}
 	
+	public DefaultListModel<AccountModel> getFriendsDefaultListModel() {
+		return (DefaultListModel<AccountModel>)friendsJList.getModel();
+	}
+	
 	public void showMessage(String message) {
 		JOptionPane.showMessageDialog(this, message);
 	}
 	
-	public Object[] simulateFriendPost() {
-		JScrollPane scrollFriends = new JScrollPane(friendsJList);
-		scrollFriends.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollFriends.setPreferredSize(new Dimension(100,75));
-		JTextField field = new JTextField();
-		
-		Object[] message = {scrollFriends, field};
-		
-		int option = JOptionPane.showConfirmDialog(this, message, "Post as a friend", JOptionPane.OK_CANCEL_OPTION);
-		
-		if (option == JOptionPane.OK_OPTION) {
-		    String text = field.getText();
-		    if (text != null && text.length() > 0 ) {
-		    	AccountModel friend = friendsJList.getSelectedValue();
-		    	if (friend != null) {
-		    		Object[] values = {friend, text};
-		    		return values;
-		    	}
-		    }	
-		} 
-		
-		return null;
-	}
 }
