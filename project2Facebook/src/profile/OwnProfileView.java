@@ -3,7 +3,6 @@ package profile;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
-import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.Font;
 
@@ -18,8 +17,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
 import javax.swing.BoxLayout;
 
 import java.util.List;

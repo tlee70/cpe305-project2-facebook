@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -32,16 +33,10 @@ public abstract class AbstractProfileView extends JFrame {
 	public AbstractProfileView() {
 		content = new JPanel();
 		content.setLayout(new GridBagLayout());
+		
 		displayNamePicLbl();
 		displaySearchBar();
 		displayButtons();
-		
-		this.setContentPane(content);
-		this.pack();
-		
-		this.setTitle("Facebook");
-		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	private void displayNamePicLbl() {
@@ -106,6 +101,10 @@ public abstract class AbstractProfileView extends JFrame {
 	
 	public void addSearchListener(ActionListener listener) {
 		searchBar.addActionListener(listener);
+	}
+	
+	public AccountModel getSearchAccount() {
+		return (AccountModel)searchBar.getSelectedItem();
 	}
 	
 	public void addSettingsListener(ActionListener listener) {
