@@ -9,11 +9,12 @@ import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JList;
-import javax.swing.DefaultListModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
@@ -35,6 +36,8 @@ public class OwnProfileView extends JFrame {
 	
 	private JPanel content;
 	private JLabel namePicLbl;
+	private JComboBox<AccountModel> searchBar;
+	private DefaultComboBoxModel<AccountModel> friendsModel;
 	private JTextArea wallArea;
 	private JTextField wallField = new JTextField(20);
 	private JButton postBtn = new JButton("Post");
@@ -43,12 +46,14 @@ public class OwnProfileView extends JFrame {
 	private JButton settingsBtn = new JButton("Settings");
 	private JButton logoutBtn = new JButton("Logout");
 	private JButton friendPostBtn = new JButton("Friend Post");
-	// private JComboBox searchBox;
 	
 	public OwnProfileView() {
+		friendsModel = new DefaultComboBoxModel();
+		
 		content = new JPanel();
 		content.setLayout(new GridBagLayout());
 		displayNamePicLbl();
+		displaySearchBar();
 		displayButtons();
 		displayWall();
 		displayFeed();
@@ -61,7 +66,6 @@ public class OwnProfileView extends JFrame {
 		this.setTitle("Facebook");
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 	}
 	
 	private void displayNamePicLbl() {
@@ -80,6 +84,19 @@ public class OwnProfileView extends JFrame {
 		labelConstraints.weightx = 0;
 		labelConstraints.weighty = 0;
 		content.add(namePicLbl, labelConstraints);
+	}
+	
+	private void displaySearchBar() {
+		searchBar = new JComboBox<AccountModel>(friendsModel);
+		searchBar.setEditable(true);
+		
+		GridBagConstraints searchBarConstraints = new GridBagConstraints();
+		searchBarConstraints.gridx = 1;
+		searchBarConstraints.gridy = 0;
+		searchBarConstraints.anchor = GridBagConstraints.FIRST_LINE_END;
+		searchBarConstraints.weightx = 0;
+		searchBarConstraints.weighty = 0;
+		content.add(searchBar, searchBarConstraints);
 	}
 	
 	private void displayButtons() {
@@ -177,7 +194,7 @@ public class OwnProfileView extends JFrame {
 	}
 	
 	private void displayFriends() {
-		friendsJList = new JList<AccountModel>();
+		friendsJList = new JList<AccountModel>(friendsModel);
 		friendsJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		friendsJList.setLayoutOrientation(JList.VERTICAL);
 		friendsJList.setVisibleRowCount(-1);
@@ -216,34 +233,35 @@ public class OwnProfileView extends JFrame {
 	}
 	
 	public void setFriendsList(List<AccountModel> friendsList) {
-		DefaultListModel<AccountModel> friendsListModel = new DefaultListModel<AccountModel>();
-		friendsJList.setModel(friendsListModel);
-		
 		Iterator<AccountModel> iterator = friendsList.iterator();
 		while (iterator.hasNext()) {
-			friendsListModel.addElement(iterator.next());
+			friendsModel.addElement(iterator.next());
 		}
 	}
 	
-	public void addSettingsListener(ActionListener sal) {
-		settingsBtn.addActionListener(sal);
+	public void addSearchListener(ActionListener listener) {
+		searchBar.addActionListener(listener);
+	}
+	
+	public void addSettingsListener(ActionListener listener) {
+		settingsBtn.addActionListener(listener);
 	}
 
-	public void addLogoutListener(ActionListener lal) {
-		logoutBtn.addActionListener(lal);
+	public void addLogoutListener(ActionListener listener) {
+		logoutBtn.addActionListener(listener);
 	}
 	
-	public void addWallListener(ActionListener wal) {
-		postBtn.addActionListener(wal);
-		wallField.addActionListener(wal);
+	public void addWallListener(ActionListener listener) {
+		postBtn.addActionListener(listener);
+		wallField.addActionListener(listener);
 	}
 	
-	public void addFriendsListener(ListSelectionListener fal) {
-		friendsJList.addListSelectionListener(fal);
+	public void addFriendsListener(ListSelectionListener listener) {
+		friendsJList.addListSelectionListener(listener);
 	}
 	
-	public void addFriendPostListener(ActionListener fpal) {
-		friendPostBtn.addActionListener(fpal);
+	public void addFriendPostListener(ActionListener listener) {
+		friendPostBtn.addActionListener(listener);
 	}
 		
 	public String getPost() {
@@ -269,8 +287,8 @@ public class OwnProfileView extends JFrame {
 		feedArea.append(text + "\n");
 	}
 	
-	public DefaultListModel<AccountModel> getFriendsDefaultListModel() {
-		return (DefaultListModel<AccountModel>)friendsJList.getModel();
+	public DefaultComboBoxModel<AccountModel> getFriendsDefaultComboBoxModel() {
+		return friendsModel;
 	}
 	
 	public void showMessage(String message) {

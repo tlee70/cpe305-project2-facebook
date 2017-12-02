@@ -1,6 +1,6 @@
 package profile;
 
-import java.awt.event.ActionListener;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -11,8 +11,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JList;
-import javax.swing.DefaultListModel;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
+import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -41,6 +43,8 @@ public class OwnProfileController implements PictureObserver,
 		op_view.addLogoutListener(new LogoutListener());
 		op_view.addWallListener(new MessagePostListener());
 		op_view.addFriendPostListener(new FriendPostListener());
+		op_view.addSearchListener(new SearchBarListener());
+		op_view.addFriendsListener(new FriendsListListener());
 
 		
 		op_view.setVisible(true);
@@ -63,11 +67,11 @@ public class OwnProfileController implements PictureObserver,
 	}
 	
 	public void notifyFriendRemove(AccountModel acc) {
-		op_view.getFriendsDefaultListModel().addElement(acc);
+		op_view.getFriendsDefaultComboBoxModel().addElement(acc);
 	}
 	
 	public void notifyFriendAdd(AccountModel acc) {
-		op_view.getFriendsDefaultListModel().removeElement(acc);
+		op_view.getFriendsDefaultComboBoxModel().removeElement(acc);
 	}
 	
 	public Image selectPicture() {
@@ -114,7 +118,7 @@ public class OwnProfileController implements PictureObserver,
 	class FriendPostListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JList<AccountModel> friendsJList = new JList<AccountModel>();
-			friendsJList.setModel(op_view.getFriendsDefaultListModel());
+			friendsJList.setModel(op_view.getFriendsDefaultComboBoxModel());
 			JScrollPane scrollFriends = new JScrollPane(friendsJList);
 			scrollFriends.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 			scrollFriends.setPreferredSize(new Dimension(100,75));
@@ -143,18 +147,17 @@ public class OwnProfileController implements PictureObserver,
 			System.exit(0);
 		}
 	}
-/**
- * Phase 2 functionality
+
 	class SearchBarListener implements ActionListener {  
 	 	public void actionPerformed(ActionEvent e) {
-			// autocomplete? display all possible matches in separate window? 
+			op_view.showMessage("Search Bar functionality not yet implemented");
 		}
 	}
 	
-	class FriendListListener implements ActionListener {  
-	 	public void actionPerformed(ActionEvent e) {
-			
+	class FriendsListListener implements ListSelectionListener {  
+	 	public void valueChanged(ListSelectionEvent e) {
+	 		op_view.showMessage("Friend List functionality not yet implemented");
 		}
 	}
- */
+
 }
