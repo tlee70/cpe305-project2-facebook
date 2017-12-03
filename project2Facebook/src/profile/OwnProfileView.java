@@ -205,7 +205,11 @@ public class OwnProfileView extends AbstractProfileView {
 	}
 	
 	public AccountModel getFriendListSelection() {
-		return friendsJList.getSelectedValue();
+		AccountModel friend = friendsJList.getSelectedValue();
+		
+		friendsJList.clearSelection();
+		
+		return friend;
 	}
 	
 	public DefaultComboBoxModel<AccountModel> getFriendsDefaultComboBoxModel() {

@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JList;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
@@ -99,8 +100,12 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 	
 	class FriendsListListener implements ListSelectionListener {  
 	 	public void valueChanged(ListSelectionEvent e) {
-	 		if ( !e.getValueIsAdjusting()) 
-	 			openFriendProfile(view.getFriendListSelection());
+	 		if ( !e.getValueIsAdjusting() ) { 
+	 			AccountModel acc = view.getFriendListSelection();
+	 			if (acc != null) {
+	 				openFriendProfile(acc);
+	 			}
+	 		}
 		}
 	}
 
