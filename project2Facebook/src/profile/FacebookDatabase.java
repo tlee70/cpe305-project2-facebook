@@ -33,11 +33,11 @@ public class FacebookDatabase extends HashMap<LoginModel, AccountModel> {
 				
 				writer.write(newLineChar + "\t\t\"LoginModel\":");
 				String loginStr = login.toJSON().replaceAll("(?m)^", "\t\t");
-				writer.write(loginStr + ",");
+				writer.write(loginStr.replaceFirst("\t\t", " ") + ",");
 				
 				writer.write(newLineChar + "\t\t\"AccountModel\":");
 				String accountStr = account.toJSON().replaceAll("(?m)^", "\t\t");
-				writer.write(accountStr);
+				writer.write(accountStr.replaceFirst("\t\t", " "));
 				
 				writer.write(newLineChar + "\t}");
 				
