@@ -49,4 +49,8 @@ public class LoginModel {
 	public int hashCode() {
 		return (100*username.hashCode()) + password.hashCode();
 	}
+	
+	public void saveState() {
+		
+	}
 }

@@ -1,10 +1,17 @@
 package profile;
 
 import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 
 import java.util.LinkedList;
 import java.util.Iterator;
+
+import org.json.*;
 
 public class AccountModel {
 	
@@ -46,17 +53,18 @@ public class AccountModel {
 	public Image getPicture() {
 		return picture;
 	}
+
 	
-	public void setPicture(Image picture) {
-		if (picture != null)
-			this.picture = picture;
-		
-		
-		PictureObserver observer;
-		Iterator<PictureObserver> observersIterator = picObs.iterator();
-		while (observersIterator.hasNext()) {
-			observer = observersIterator.next();
-			observer.updatePic(this.picture);
+	public void setPicture(Image image) {
+		if (image != null) {
+			picture = image;
+				
+			PictureObserver observer;
+			Iterator<PictureObserver> observersIterator = picObs.iterator();
+			while (observersIterator.hasNext()) {
+				observer = observersIterator.next();
+				observer.updatePic(this.picture);
+			}
 		}
 	}
 	
@@ -165,11 +173,33 @@ public class AccountModel {
 		AccountModel acc = (AccountModel)other;
 		return (acc.getName().equals(name));
 	}
+	
 	/**
 	 * Saves the state of the AccountModel for comparison and possible recovery
 	 * List of friends, wall info, and news feed stored as separate text files
 	 */
 	public void saveState() {
+		saveFriends();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void saveFriends() {
+		//JSONArray jsonFriends = new JSONArray(friends);
+		JSONArray jsonFriends = new JSONArray();
+		Iterator<AccountModel> iterator = friends.iterator();
+		while(iterator.hasNext()) {
+			AccountModel friend = iterator.next();
+			jsonFriends.put(friend.getName());
+		}
+		
+		System.out.println(jsonFriends.toString(4));
+	}
+	
+	private void saveWall() {
+		
+	}
+	
+	private void saveFeed() {
 		
 	}
 }

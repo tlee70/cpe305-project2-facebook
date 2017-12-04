@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -43,17 +44,7 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 		view.addSearchListener(new SearchBarListener());
 	}
 	
-	protected void openStrangerProfile(AccountModel stranger) {
-		new StrangerProfileController(new StrangerProfileView(), stranger, myAcc_model, 
-				login_model, accounts);
-	}
-	
-	protected void openFriendProfile(AccountModel friend) {
-		new FriendProfileController(new FriendProfileView(), friend, myAcc_model, 
-				login_model, accounts);
-	}
-	
-	public Image selectPicture() {
+	private void selectPicture () {
 		JFileChooser fc = new JFileChooser();
 		fc.setCurrentDirectory(new File("~/sbh"));
 		int result = fc.showOpenDialog(view);
@@ -62,25 +53,23 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 			File selectedFile = fc.getSelectedFile();
 			try {
 				Image image = ImageIO.read(selectedFile);
-				return image;
+				
+				if (image != null) {
+					myAcc_model.setPicture(image);
+				}
 			}
 			catch (IOException exception) {
 				System.out.println(exception.getStackTrace());
 			}
 		}
-		else if (result == JFileChooser.CANCEL_OPTION) {
-			System.out.println("Image selection canceled");
-		}
-		
-		return null;
 	}
-	
+		
 	class SettingsListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			String[] options = new String[] {"Username", "Password", "Profile Picture", "Deactivate Account", "Cancel"};
+			String[] options = new String[] {"Username", "Password", "Profile Picture", "Cancel"};
 		    int response = JOptionPane.showOptionDialog(view, "Select an option to change", "Settings",
 		        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-		        null, options, options[4]);
+		        null, options, options[3]);
 		    
 		    if (response == 0) {
 		    	String username = JOptionPane.showInputDialog(view, "Set new username", login_model.getUsername());
@@ -91,18 +80,17 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 		    	if (password != null)
 		    		login_model.setPassword(password);
 		    } else if (response == 2) {
-		    	myAcc_model.setPicture(selectPicture());
-		    } else if (response == 3) {
-		    	// Deactivate account
-		    }
+		    	selectPicture();
+		    } 
 			
 		}
 	}
 	
 	class LogoutListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			myAcc_model.saveState();
 			view.showMessage("Logging you out");
+			login_model.saveState();
+			myAcc_model.saveState();
 			System.exit(0);
 		}
 	}
@@ -111,10 +99,12 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	 	public void actionPerformed(ActionEvent e) {
 			AccountModel acc = view.getSearchAccount();
 			if (myAcc_model.getFriends().contains(acc)) {
-				openFriendProfile(acc);
+				new FriendProfileController(new FriendProfileView(), acc,
+						myAcc_model, login_model, accounts);
 			}
 			else {
-				openStrangerProfile(acc);
+				new StrangerProfileController(new StrangerProfileView(), acc,
+						myAcc_model, login_model, accounts);
 			}
 		}
 	}
