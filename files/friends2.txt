@@ -1,0 +1,6 @@
+[
+	"Sam Haire",
+	"Taylor Wood",
+	"Dylan Kirkby",
+	"Yesenia Moreno"
+]

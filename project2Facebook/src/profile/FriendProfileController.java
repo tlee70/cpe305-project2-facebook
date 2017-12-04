@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import login.LoginModel;
-import profile.StrangerProfileController.FollowListener;
 
 public class FriendProfileController extends AbstractProfileController<FriendProfileView> 
 	implements WallObserver, PictureObserver {

@@ -17,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+//import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 public abstract class AbstractProfileView extends JFrame {
 
 	protected static final int PICTURE_WIDTH = 150;
@@ -60,6 +62,7 @@ public abstract class AbstractProfileView extends JFrame {
 	private void displaySearchBar() {
 		searchBar = new JComboBox<AccountModel>();
 		searchBar.setEditable(false);
+		//AutoCompleteDecorator.decorate(searchBar);
 		
 		GridBagConstraints searchBarConstraints = new GridBagConstraints();
 		searchBarConstraints.gridx = 1;

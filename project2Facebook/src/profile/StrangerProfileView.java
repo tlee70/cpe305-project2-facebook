@@ -16,7 +16,7 @@ public class StrangerProfileView extends AbstractProfileView {
 
 		this.pack();
 		
-		this.setTitle("Facebook");
+		this.setTitle("Stranger View");
 		
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}

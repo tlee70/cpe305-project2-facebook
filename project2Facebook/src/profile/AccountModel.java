@@ -1,17 +1,16 @@
 package profile;
 
 import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
+
+import java.util.Collection;
 import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-
 import java.util.LinkedList;
 import java.util.Iterator;
 
-import org.json.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 public class AccountModel {
 	
@@ -56,15 +55,13 @@ public class AccountModel {
 
 	
 	public void setPicture(Image image) {
-		if (image != null) {
-			picture = image;
-				
-			PictureObserver observer;
-			Iterator<PictureObserver> observersIterator = picObs.iterator();
-			while (observersIterator.hasNext()) {
-				observer = observersIterator.next();
-				observer.updatePic(this.picture);
-			}
+		picture = image;
+
+		PictureObserver observer;
+		Iterator<PictureObserver> observersIterator = picObs.iterator();
+		while (observersIterator.hasNext()) {
+			observer = observersIterator.next();
+			observer.updatePic(this.picture);
 		}
 	}
 	
@@ -179,27 +176,40 @@ public class AccountModel {
 	 * List of friends, wall info, and news feed stored as separate text files
 	 */
 	public void saveState() {
-		saveFriends();
+		jsonWrite(friends, "files/friends.txt");
+		jsonWrite(wall.getPosts(), "files/wall.txt");
+		jsonWrite(feed.getPosts(), "files/feed.txt");
 	}
 
-	@SuppressWarnings("unchecked")
-	private void saveFriends() {
-		//JSONArray jsonFriends = new JSONArray(friends);
-		JSONArray jsonFriends = new JSONArray();
-		Iterator<AccountModel> iterator = friends.iterator();
-		while(iterator.hasNext()) {
-			AccountModel friend = iterator.next();
-			jsonFriends.put(friend.getName());
+	public void jsonWrite(Collection<?> collection, String fileName) {
+		File file = new File(fileName);
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			String newlineChar = System.getProperty("line.separator");
+			
+			writer.write("[");
+			writer.flush();
+			
+			Iterator<?> iterator = collection.iterator();
+			while(iterator.hasNext()) {
+				Object obj = iterator.next();
+				writer.write(newlineChar + "\t\"" + obj.toString() + "\"");
+				if (iterator.hasNext())  {
+					writer.write(",");
+				}
+				writer.flush();
+			}
+			
+			writer.write(newlineChar + "]");
+			writer.flush();
+			
+			writer.close();
+		}
+		catch (IOException e) {
+			System.out.println(e.getStackTrace());
+			System.out.println(e);
 		}
 		
-		System.out.println(jsonFriends.toString(4));
 	}
-	
-	private void saveWall() {
-		
-	}
-	
-	private void saveFeed() {
-		
-	}
+
 }
