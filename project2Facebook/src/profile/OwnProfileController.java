@@ -34,8 +34,8 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 		view.addFriendPostListener(new FriendPostListener());
 		view.addFriendsListener(new FriendsListListener());
 		
-		view.setWall(myAcc_model.getWall().toString());
-		view.setFeed(myAcc_model.getFeed().toString());
+		view.appendWall(myAcc_model.getWall().toString());
+		view.appendFeed(myAcc_model.getFeed().toString());
 
 		view.pack();
 		view.setVisible(true);

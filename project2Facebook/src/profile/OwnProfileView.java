@@ -47,7 +47,7 @@ public class OwnProfileView extends AbstractProfileView {
 
 		this.pack();
 		
-		this.setTitle("Facebook");
+		this.setTitle("Own Profile");
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -188,16 +188,8 @@ public class OwnProfileView extends AbstractProfileView {
 		return post;
 	}
 	
-	public void setWall(String text) {
-		wallArea.setText(text);
-	}
-	
 	public void appendWall(String text) {
 		wallArea.append(text + "\n");
-	}
-	
-	public void setFeed(String text) {
-		feedArea.setText(text);
 	}
 	
 	public void appendFeed(String text) {

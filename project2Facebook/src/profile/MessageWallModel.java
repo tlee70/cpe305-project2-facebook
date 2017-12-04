@@ -25,9 +25,12 @@ public class MessageWallModel {
 		Iterator<String> iterator = posts.iterator();
 		while (iterator.hasNext()) {
 			builder.append(iterator.next());
-			builder.append("\n");
+			if (iterator.hasNext()) {
+				builder.append("\n");
+			}
 		}
 		
 		return builder.toString();
 	}
+	
 }

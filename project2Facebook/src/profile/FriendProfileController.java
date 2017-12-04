@@ -20,7 +20,7 @@ public class FriendProfileController extends AbstractProfileController<FriendPro
 		
 		view.setUnfollowListener(new UnfollowListener());
 		
-		view.setWall(friendAcc_model.getWall().toString());
+		view.appendWall(friendAcc_model.getWall().toString());
 		
 		view.pack();
 		view.setVisible(true);

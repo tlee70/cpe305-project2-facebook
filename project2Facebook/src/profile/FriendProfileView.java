@@ -22,7 +22,7 @@ public class FriendProfileView extends AbstractProfileView {
 
 		this.pack();
 		
-		this.setTitle("Facebook");
+		this.setTitle("Friend Profile");
 		
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
@@ -63,10 +63,6 @@ public class FriendProfileView extends AbstractProfileView {
 	
 	public void setUnfollowListener(ActionListener listener) {
 		unfollowBtn.addActionListener(listener);
-	}
-	
-	public void setWall(String text) {
-		wallArea.setText(text);
 	}
 	
 	public void appendWall(String text) {
