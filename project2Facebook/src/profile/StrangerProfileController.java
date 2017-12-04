@@ -11,8 +11,8 @@ public class StrangerProfileController extends AbstractProfileController<Strange
 	implements PictureObserver {
 	
 	public StrangerProfileController(StrangerProfileView view, AccountModel strangerAcc_model, 
-			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase accounts) {
-		super(view, strangerAcc_model, myAcc_model, login_model, accounts);
+			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase database) {
+		super(view, strangerAcc_model, myAcc_model, login_model, database);
 	
 		strangerAcc_model.addPicObserver(this);
 		

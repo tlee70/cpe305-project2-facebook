@@ -1,23 +1,32 @@
 package profile;
 
-import java.awt.Image;
-
 import java.util.Collection;
 import java.util.List;
+import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.Map;
+
+import java.awt.Image;
 
 import javax.imageio.ImageIO;
 
-import java.util.LinkedList;
-import java.util.Iterator;
-
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 public class AccountModel {
 	
 	private static final String DEFAULT_BLANK_PIC_PATH = "pics/blank.png"; 
+	
+	private static final String FRIEND_FILE =  "files/friends.txt";
+	private static final String WALL_FILE = "files/wall.txt";
 	
 	private String name;
 	private Image picture;
@@ -48,13 +57,17 @@ public class AccountModel {
 		friendsListObs = new LinkedList<FriendsListObserver>();
 		
 		try {
-			Image picture = ImageIO.read(new File("pics/blank.png"));
+			Image picture = ImageIO.read(new File(picturePath));
 			this.picture = picture;
 		}
 		catch (IOException e) {
 			System.out.println(e);
 			System.out.println(e.getStackTrace());
 		}
+	}
+	
+	public AccountModel(JSONObject jaccount) {
+		this((String)jaccount.get("name"), (String)jaccount.get("picturePath"));
 	}
 	
 	public String getName() {
@@ -69,6 +82,19 @@ public class AccountModel {
 	 */
 	public String toString() {
 		return name;
+	}
+	
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		if ( !(other instanceof AccountModel) ) {
+			return false;
+		}
+		
+		AccountModel otherAcc = (AccountModel)other;
+		
+		return otherAcc.getName().equals(name); 
 	}
 	
 	public void setName(String name) {
@@ -203,22 +229,6 @@ public class AccountModel {
 			observer.updateFeed( feed.getLatestPost() );
 		}
 	}
-
-	public boolean equals(Object other) {
-		if (other == null)
-			return false;
-		if ( !(other instanceof AccountModel) )
-			return false;
-		
-		AccountModel acc = (AccountModel)other;
-		if ( !(acc.getName().equals(name)) ) {
-			return false;
-		} else if ( !(acc.getPicturePath().equals(picturePath)) ) {
-			return false;
-		}
-		
-		return true;
-	}
 	
 	public String toJSON() {
 		StringBuilder builder = new StringBuilder();
@@ -245,9 +255,9 @@ public class AccountModel {
 	 * List of friends, wall info, and news feed stored as separate text files
 	 */
 	public void saveState() {
-		jsonWriteCollection(friends, "files/friends.txt");
-		jsonWriteCollection(wall, "files/wall.txt");
-		feed.saveState("files/feed.txt");
+		jsonWriteCollection(friends, FRIEND_FILE);
+		jsonWriteCollection(wall, WALL_FILE);
+		feed.saveState();
 	}
 
 	public void jsonWriteCollection(Collection<?> collection, String fileName) {
@@ -278,7 +288,81 @@ public class AccountModel {
 			System.out.println(e.getStackTrace());
 			System.out.println(e);
 		}
-		
+	}
+	
+	/**
+	 * Initializes chosen account from input files w/ JSON format
+	 * 
+	 * @param accounts List of all accounts needed for linking to friends & feed posts
+	 */
+	public void initialize(Map<String, AccountModel> accounts) {
+		initializeFriends(accounts);
+		initializePosts();
+		NewsFeedModel.initialize(accounts);
+	}
+	
+	private void initializeFriends(Map<String, AccountModel> accounts) {
+		try {
+			File file = new File(FRIEND_FILE);
+			FileReader reader = new FileReader(file);
+			
+			JSONParser parser = new JSONParser();
+		    Object obj = parser.parse(reader);
+			JSONArray jarr = (JSONArray)obj;
+			
+			Iterator iterator = jarr.iterator();
+			while (iterator.hasNext()) {
+				String name = (String)iterator.next();
+				AccountModel friend = accounts.get(name);
+				if (friend == null) {
+					System.out.println("NewsFeedModel could not find AccountModel '" + name + "'");
+				}
+				else {
+					this.addFriend(friend);
+				}
+
+			}
+			
+			reader.close();
+
+		}
+		catch(IOException e) {
+			System.out.println("Initialize caught IOException: " + e);
+			System.out.println(e.getStackTrace());
+		}
+		catch(ParseException e) {
+			System.out.println("Initialize caught ParseException: " + e);
+			System.out.println(e.getStackTrace());
+		}	
+	}
+	
+	private void initializePosts() {
+		try {
+			File file = new File(WALL_FILE);
+			FileReader reader = new FileReader(file);
+			
+			JSONParser parser = new JSONParser();
+		    Object obj = parser.parse(reader);
+			JSONArray jarr = (JSONArray)obj;
+			
+			Iterator iterator = jarr.iterator();
+			while (iterator.hasNext()) {
+				String post = (String)iterator.next();
+				
+				this.post(post);
+			}
+			
+			reader.close();
+
+		}
+		catch(IOException e) {
+			System.out.println("Initialize caught IOException: " + e);
+			System.out.println(e.getStackTrace());
+		}
+		catch(ParseException e) {
+			System.out.println("Initialize caught ParseException: " + e);
+			System.out.println(e.getStackTrace());
+		}	
 	}
 
 }

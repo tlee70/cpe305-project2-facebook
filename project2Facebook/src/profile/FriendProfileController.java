@@ -3,7 +3,6 @@ package profile;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import login.LoginModel;
 
@@ -11,8 +10,8 @@ public class FriendProfileController extends AbstractProfileController<FriendPro
 	implements WallObserver, PictureObserver {
 	
 	public FriendProfileController(FriendProfileView view, AccountModel friendAcc_model, 
-			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase accounts) {
-		super(view, friendAcc_model, myAcc_model, login_model, accounts);
+			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase database) {
+		super(view, friendAcc_model, myAcc_model, login_model, database);
 		
 		friendAcc_model.addPicObserver(this);
 		friendAcc_model.addWallObserver(this);

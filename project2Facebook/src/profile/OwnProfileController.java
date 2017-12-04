@@ -18,8 +18,10 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 	implements PictureObserver, WallObserver, NewsFeedObserver, FriendsListObserver {
 	
 	public OwnProfileController(OwnProfileView view, AccountModel myAcc_model, 
-			LoginModel login_model, FacebookDatabase accounts) {
-		super(view, myAcc_model, myAcc_model, login_model, accounts);
+			LoginModel login_model, FacebookDatabase database) {
+		super(view, myAcc_model, myAcc_model, login_model, database);
+		
+		myAcc_model.initialize(database.getAccounts());
 
 		myAcc_model.addPicObserver(this);
 		myAcc_model.addWallObserver(this);

@@ -17,26 +17,18 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	protected AccountModel myAcc_model;
 	protected AccountModel dispAcc_model;
 	protected LoginModel login_model;
-	protected FacebookDatabase accounts;
+	protected FacebookDatabase database;
 	
 	public AbstractProfileController(T view, AccountModel dispAcc_model, 
-			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase accounts) {
+			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase database) {
 		this.view = view;
 		this.dispAcc_model = dispAcc_model;
-		
-		/**if ( !myAcc_model.equals(accounts.get(login_model)) ) {
-			System.out.println("Discepancy between given account and account retrieved w/ login");
-			System.out.println(myAcc_model);
-			System.out.println(login_model.getUsername() + ", " + login_model.getPassword());
-			System.out.println(accounts.get(login_model));
-			myAcc_model = accounts.get(login_model);
-		} */
 		this.myAcc_model = myAcc_model;
 		this.login_model = login_model;
-		this.accounts = accounts;
+		this.database = database;
 			
 		// Prevents own account from showing in search bar
-		ArrayList<AccountModel> otherAccs = new ArrayList<AccountModel>(accounts.values());
+		ArrayList<AccountModel> otherAccs = new ArrayList<AccountModel>(database.values());
 		otherAccs.remove(myAcc_model);
 		AccountModel[] accountsArr = (AccountModel[])otherAccs.toArray(new AccountModel[otherAccs.size()]);
 			
@@ -58,12 +50,12 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	 */
 	protected void openFriendProfile(AccountModel acc) {
 		new FriendProfileController(new FriendProfileView(), acc,
-				myAcc_model, login_model, accounts);
+				myAcc_model, login_model, database);
 	}
 	
 	protected void openStrangerProfile(AccountModel acc) {
 		new StrangerProfileController(new StrangerProfileView(), acc,
-				myAcc_model, login_model, accounts);
+				myAcc_model, login_model, database);
 	}
 	
 	protected void selectPicture () {
@@ -102,7 +94,7 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	class LogoutListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			view.showMessage("Logging you out");
-			accounts.saveState();
+			database.saveState();
 			myAcc_model.saveState();
 			System.exit(0);
 		}

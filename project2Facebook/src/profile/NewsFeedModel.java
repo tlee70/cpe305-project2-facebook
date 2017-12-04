@@ -1,27 +1,36 @@
 package profile;
 
 import java.util.List;
+import java.util.Map;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import login.LoginModel;
+
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.StringBuilder;
 
 public class NewsFeedModel {
-	private List<Pair<AccountModel,String> > posts;
+
+	private static final String FEED_FILE = "files/feed.txt";
+	
+	private List<Pair > posts;
 	
 	public NewsFeedModel() {
-		posts = new LinkedList<Pair<AccountModel, String>>();
+		posts = new LinkedList<Pair>();
 	}
 	
 	public void post(AccountModel acc, String message) {
-		posts.add(new Pair<AccountModel, String>(acc, message));
-	}
-	
-	public List<Pair<AccountModel, String>> getPosts() {
-		return posts;
+		posts.add(new Pair(acc, message));
 	}
 	
 	public String getLatestPost() {
@@ -30,7 +39,7 @@ public class NewsFeedModel {
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		Iterator<Pair<AccountModel, String>> iterator = posts.iterator();
+		Iterator<Pair> iterator = posts.iterator();
 		while (iterator.hasNext()) {
 			builder.append(iterator.next().toString());
 			if (iterator.hasNext()) {
@@ -41,8 +50,8 @@ public class NewsFeedModel {
 		return builder.toString();
 	}
 	
-	public void saveState(String fileName) {
-		File file = new File(fileName);
+	public void saveState() {
+		File file = new File(FEED_FILE);
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			String newlineChar = System.getProperty("line.separator");
@@ -50,9 +59,9 @@ public class NewsFeedModel {
 			writer.write("[");
 			writer.flush();
 			
-			Iterator<Pair<AccountModel, String>> iterator = posts.iterator();
+			Iterator<Pair> iterator = posts.iterator();
 			while(iterator.hasNext()) {
-				Pair<AccountModel, String> pair = iterator.next();
+				Pair pair = iterator.next();
 				String str = pair.toJSON().replaceAll("(?m)^", "\t");
 				writer.write(newlineChar + str);
 				if (iterator.hasNext())  {
@@ -72,25 +81,62 @@ public class NewsFeedModel {
 		}
 	}
 	
-	class Pair<L, R> {
-		private L left;
-		private R right;
+	public static void initialize(Map<String, AccountModel> accounts) {
+		try {
+			File file = new File(FEED_FILE);
+			FileReader reader = new FileReader(file);
+			
+			JSONParser parser = new JSONParser();
+		    Object obj = parser.parse(reader);
+			JSONArray jarr = (JSONArray)obj;
+			
+			Iterator iterator = jarr.iterator();
+			while (iterator.hasNext()) {
+				JSONObject jobj = (JSONObject)iterator.next();
+				
+				String post = (String)jobj.get("post");
+					
+				String posterName = (String)jobj.get("poster");
+				AccountModel poster = accounts.get(posterName);
+				if (poster == null) {
+					System.out.println("NewsFeedModel could not find AccountModel '" + posterName + "'");
+				}
+				else {
+					poster.post(post);
+				}
+			}
+			
+			reader.close();
+		}
+		catch(IOException e) {
+			System.out.println("Initialize caught IOException: " + e);
+			System.out.println(e.getStackTrace());
+		}
+		catch(ParseException e) {
+			System.out.println("Initialize caught ParseException: " + e);
+			System.out.println(e.getStackTrace());
+		}	
+	}
+	
+	class Pair {
+		private AccountModel poster;
+		private String post;
 		
-		public Pair(L left, R right) {
-			this.left = left;
-			this.right = right;
+		public Pair(AccountModel left, String right) {
+			this.poster = left;
+			this.post = right;
 		}
 		
-		public L getLeft() {
-			return left;
+		public AccountModel getPoster() {
+			return poster;
 		}
 		
-		public R getRight() {
-			return right;
+		public String getRight() {
+			return post;
 		}
 		
 		public String toString() {
-			return left.toString() + ": " + right.toString();
+			return poster.toString() + ": " + post.toString();
 		}
 		
 		public String toJSON() {
@@ -99,14 +145,14 @@ public class NewsFeedModel {
 			
 			builder.append("{");
 			builder.append(newlineChar);
-			builder.append("\t\"left\": ");
+			builder.append("\t\"poster\": ");
 			builder.append("\"");
-			builder.append(left.toString());
+			builder.append(poster.toString());
 			builder.append("\"");
 			builder.append(newlineChar);
-			builder.append("\t\"right\": ");
+			builder.append("\t\"post\": ");
 			builder.append("\"");
-			builder.append(right.toString());
+			builder.append(post.toString());
 			builder.append("\"");
 			builder.append(newlineChar);
 			builder.append("}");

@@ -1,6 +1,5 @@
 [
 	"Steven Meissner",
 	"Yesenia Moreno",
-	"Taylor Wood",
 	"Dylan Kirkby"
 ]

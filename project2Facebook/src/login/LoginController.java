@@ -9,11 +9,11 @@ import profile.FacebookDatabase;
 
 public class LoginController {
 	private LoginView li_view;
-	private FacebookDatabase accounts;
+	private FacebookDatabase database;
 	
-	public LoginController(LoginView view, FacebookDatabase accounts) {
+	public LoginController(LoginView view, FacebookDatabase database) {
 		this.li_view = view;
-		this.accounts = accounts;
+		this.database = database;
 		
 		view.addEnterListener(new LoginListener());
 		view.setVisible(true);
@@ -23,10 +23,15 @@ public class LoginController {
 		public void actionPerformed(ActionEvent event) {
 			LoginModel attemptedLogin = new LoginModel(li_view.getUsername(), li_view.getPassword());
 			
-			if (accounts.containsKey(attemptedLogin)) {
+			if (database.containsKey(attemptedLogin)) {
 				li_view.dispose();
-					new OwnProfileController(new OwnProfileView(), accounts.get(attemptedLogin),
-							attemptedLogin, accounts);
+				
+				// Replaces key in database with key being passed to controller
+				// keys are "equal", but need same pointer for modification by settings
+				database.put(attemptedLogin, database.remove(attemptedLogin));
+				
+				new OwnProfileController(new OwnProfileView(), database.get(attemptedLogin),
+						attemptedLogin, database);
 			}
 			else {
 				li_view.showError("Incorrect login information");

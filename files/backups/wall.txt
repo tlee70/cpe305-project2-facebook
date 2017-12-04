@@ -6,6 +6,5 @@
 	";ljlasdf",
 	"asdfs",
 	"asfadsafbvdf",
-	"asdbadf",
-	"Garbage"
+	"asdbadf"
 ]

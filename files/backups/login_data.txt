@@ -41,16 +41,6 @@
 	},
 	{
 		"LoginModel": {
-			"username": "A"
-			"password": "B"
-		},
-		"AccountModel": {
-			"name": "Tim Lee"
-			"picturePath": "C:\Users\Tim\git\cpe305-project2-facebook\pics\04 - Cancer.jpg"
-		}
-	},
-	{
-		"LoginModel": {
 			"username": "samHaire"
 			"password": "hairysam"
 		},
@@ -67,6 +57,16 @@
 		"AccountModel": {
 			"name": "Dylan Kirkby"
 			"picturePath": "pics/blank.png"
+		}
+	},
+	{
+		"LoginModel": {
+			"username": "tlee70"
+			"password": "terriblePassword"
+		},
+		"AccountModel": {
+			"name": "Tim Lee"
+			"picturePath": "C:\Users\Tim\git\cpe305-project2-facebook\pics\01 - Aries.jpg"
 		}
 	}
 ]

@@ -1,5 +1,7 @@
 package login;
 
+import org.json.simple.JSONObject;
+
 public class LoginModel {
 	private String username;
 	private String password;
@@ -7,6 +9,11 @@ public class LoginModel {
 	public LoginModel(String username, String password) {
 		this.username = username;
 		this.password = password;
+	}
+	
+	public LoginModel(JSONObject jlogin) {
+		this.username = (String)jlogin.get("username");
+		this.password = (String)jlogin.get("password");
 	}
 	
 	public String getUsername() {
