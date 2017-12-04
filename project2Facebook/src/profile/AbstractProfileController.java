@@ -44,7 +44,24 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 		view.addSearchListener(new SearchBarListener());
 	}
 	
-	private void selectPicture () {
+	/**
+	 * Creates and links FriendProfileView and FriendProfileController for given account
+	 * One-line code given own method so that child classes may call it
+	 * Only have to change this method if constructor changes
+	 * 
+	 * @param acc
+	 */
+	protected void openFriendProfile(AccountModel acc) {
+		new FriendProfileController(new FriendProfileView(), acc,
+				myAcc_model, login_model, accounts);
+	}
+	
+	protected void openStrangerProfile(AccountModel acc) {
+		new StrangerProfileController(new StrangerProfileView(), acc,
+				myAcc_model, login_model, accounts);
+	}
+	
+	protected void selectPicture () {
 		JFileChooser fc = new JFileChooser();
 		fc.setCurrentDirectory(new File("~/sbh"));
 		int result = fc.showOpenDialog(view);
@@ -99,12 +116,10 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	 	public void actionPerformed(ActionEvent e) {
 			AccountModel acc = view.getSearchAccount();
 			if (myAcc_model.getFriends().contains(acc)) {
-				new FriendProfileController(new FriendProfileView(), acc,
-						myAcc_model, login_model, accounts);
+				openFriendProfile(acc);
 			}
 			else {
-				new StrangerProfileController(new StrangerProfileView(), acc,
-						myAcc_model, login_model, accounts);
+				openStrangerProfile(acc);
 			}
 		}
 	}
