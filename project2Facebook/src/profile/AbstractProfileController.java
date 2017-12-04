@@ -1,14 +1,11 @@
 package profile;
 
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -20,19 +17,28 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	protected AccountModel myAcc_model;
 	protected AccountModel dispAcc_model;
 	protected LoginModel login_model;
-	protected List<AccountModel> accounts;
+	protected FacebookDatabase accounts;
 	
 	public AbstractProfileController(T view, AccountModel dispAcc_model, 
-			AccountModel myAcc_model, LoginModel login_model, List<AccountModel> accounts) {
+			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase accounts) {
 		this.view = view;
-		this.dispAcc_model =  dispAcc_model;
+		this.dispAcc_model = dispAcc_model;
+		
+		/**if ( !myAcc_model.equals(accounts.get(login_model)) ) {
+			System.out.println("Discepancy between given account and account retrieved w/ login");
+			System.out.println(myAcc_model);
+			System.out.println(login_model.getUsername() + ", " + login_model.getPassword());
+			System.out.println(accounts.get(login_model));
+			myAcc_model = accounts.get(login_model);
+		} */
 		this.myAcc_model = myAcc_model;
 		this.login_model = login_model;
 		this.accounts = accounts;
 			
 		// Prevents own account from showing in search bar
-		accounts.remove(myAcc_model);
-		AccountModel[] accountsArr = (AccountModel[])accounts.toArray(new AccountModel[accounts.size()]);
+		ArrayList<AccountModel> otherAccs = new ArrayList<AccountModel>(accounts.values());
+		otherAccs.remove(myAcc_model);
+		AccountModel[] accountsArr = (AccountModel[])otherAccs.toArray(new AccountModel[otherAccs.size()]);
 			
 		view.setProfileName(dispAcc_model.getName());
 		view.setProfilePic(dispAcc_model.getPicture());
@@ -48,7 +54,7 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	 * One-line code given own method so that child classes may call it
 	 * Only have to change this method if constructor changes
 	 * 
-	 * @param acc
+	 * @param acc the AccountModel to open a profile for
 	 */
 	protected void openFriendProfile(AccountModel acc) {
 		new FriendProfileController(new FriendProfileView(), acc,
@@ -62,21 +68,12 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	
 	protected void selectPicture () {
 		JFileChooser fc = new JFileChooser();
-		fc.setCurrentDirectory(new File("~/sbh"));
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir") + "/pics"));
 		int result = fc.showOpenDialog(view);
 		
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fc.getSelectedFile();
-			try {
-				Image image = ImageIO.read(selectedFile);
-				
-				if (image != null) {
-					myAcc_model.setPicture(image);
-				}
-			}
-			catch (IOException exception) {
-				System.out.println(exception.getStackTrace());
-			}
+			myAcc_model.setPicture(selectedFile.getPath());
 		}
 	}
 		
@@ -105,7 +102,7 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 	class LogoutListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			view.showMessage("Logging you out");
-			login_model.saveState();
+			accounts.saveState();
 			myAcc_model.saveState();
 			System.exit(0);
 		}

@@ -1,7 +1,6 @@
 [
-	"One",
-	"two",
-	"three",
-	"fo-ur",
-	"fiive"
+	"Once",
+	"upon ",
+	"a ",
+	"time"
 ]

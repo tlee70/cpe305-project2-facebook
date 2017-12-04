@@ -99,13 +99,15 @@ public class NewsFeedModel {
 			
 			builder.append("{");
 			builder.append(newlineChar);
-			builder.append("\t");
-			builder.append("left: ");
+			builder.append("\t\"left\": ");
+			builder.append("\"");
 			builder.append(left.toString());
+			builder.append("\"");
 			builder.append(newlineChar);
-			builder.append("\t");
-			builder.append("right: ");
+			builder.append("\t\"right\": ");
+			builder.append("\"");
 			builder.append(right.toString());
+			builder.append("\"");
 			builder.append(newlineChar);
 			builder.append("}");
 			

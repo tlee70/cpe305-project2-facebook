@@ -11,7 +11,7 @@ public class FriendProfileController extends AbstractProfileController<FriendPro
 	implements WallObserver, PictureObserver {
 	
 	public FriendProfileController(FriendProfileView view, AccountModel friendAcc_model, 
-			AccountModel myAcc_model, LoginModel login_model, List<AccountModel> accounts) {
+			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase accounts) {
 		super(view, friendAcc_model, myAcc_model, login_model, accounts);
 		
 		friendAcc_model.addPicObserver(this);

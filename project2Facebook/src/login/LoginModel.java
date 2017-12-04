@@ -50,7 +50,22 @@ public class LoginModel {
 		return (100*username.hashCode()) + password.hashCode();
 	}
 	
-	public void saveState() {
+	public String toJSON() {
+		StringBuilder builder = new StringBuilder();
+		String newlineChar = System.getProperty("line.separator");
 		
+		builder.append("{");
+		builder.append(newlineChar);
+		builder.append("\t");
+		builder.append("\"username\": ");
+		builder.append("\"" + username + "\"");
+		builder.append(newlineChar);
+		builder.append("\t");
+		builder.append("\"password\": ");
+		builder.append("\"" + password + "\"");
+		builder.append(newlineChar);
+		builder.append("}");
+		
+		return builder.toString();
 	}
 }

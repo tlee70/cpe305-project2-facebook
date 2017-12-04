@@ -2,8 +2,6 @@ package profile;
 
 import login.LoginModel;
 
-import java.util.List;
-
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -19,7 +17,8 @@ import java.awt.Image;
 public class OwnProfileController extends AbstractProfileController<OwnProfileView> 
 	implements PictureObserver, WallObserver, NewsFeedObserver, FriendsListObserver {
 	
-	public OwnProfileController(OwnProfileView view, AccountModel myAcc_model, LoginModel login_model, List<AccountModel> accounts) {
+	public OwnProfileController(OwnProfileView view, AccountModel myAcc_model, 
+			LoginModel login_model, FacebookDatabase accounts) {
 		super(view, myAcc_model, myAcc_model, login_model, accounts);
 
 		myAcc_model.addPicObserver(this);
@@ -38,7 +37,7 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 			view.appendWall(wall);
 		}
 		
-		String feed = myAcc_model.getFeed().toString();
+		String feed = myAcc_model.getFeedPosts();
 		if (feed != null && feed.length() > 0) {
 			view.appendFeed(feed);
 		}

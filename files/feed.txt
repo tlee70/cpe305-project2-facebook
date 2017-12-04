@@ -1,14 +1,14 @@
 [
 	{
-		left: Dylan Kirkby
-		right: sdf
+		"left": "Sam Haire"
+		"right": "sammy"
 	},
 	{
-		left: Steven Meissner
-		right: Paklk
+		"left": "Taylor Wood"
+		"right": "ptheven"
 	},
 	{
-		left: Steven Meissner
-		right: sdf
+		"left": "Taylor Wood"
+		"right": "a"
 	}
 ]

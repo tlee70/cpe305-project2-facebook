@@ -1,0 +1,72 @@
+[
+	{
+		"LoginModel":		{
+			"username": "taylorWood"
+			"password": "M0rn1ngW00d"
+		},
+		"AccountModel":		{
+			"name": "Taylor Wood"
+			"picturePath": "pics/blank.png"
+		}
+	},
+	{
+		"LoginModel":		{
+			"username": "stevenMeissner"
+			"password": "phteven"
+		},
+		"AccountModel":		{
+			"name": "Steven Meissner"
+			"picturePath": "pics/blank.png"
+		}
+	},
+	{
+		"LoginModel":		{
+			"username": "yesMoreno"
+			"password": "corruptingInfluence"
+		},
+		"AccountModel":		{
+			"name": "Yesenia Moreno"
+			"picturePath": "pics/blank.png"
+		}
+	},
+	{
+		"LoginModel":		{
+			"username": "calebBarber"
+			"password": "B@rb3r5hop"
+		},
+		"AccountModel":		{
+			"name": "Caleb Barber"
+			"picturePath": "pics/blank.png"
+		}
+	},
+	{
+		"LoginModel":		{
+			"username": "samHaire"
+			"password": "hairysam"
+		},
+		"AccountModel":		{
+			"name": "Sam Haire"
+			"picturePath": "pics/blank.png"
+		}
+	},
+	{
+		"LoginModel":		{
+			"username": "dylanKirkby"
+			"password": "quirkyKirkby"
+		},
+		"AccountModel":		{
+			"name": "Dylan Kirkby"
+			"picturePath": "pics/blank.png"
+		}
+	},
+	{
+		"LoginModel":		{
+			"username": "Ol' Greg"
+			"password": "Gandhi"
+		},
+		"AccountModel":		{
+			"name": "Tim Lee"
+			"picturePath": "C:\Users\Tim\git\cpe305-project2-facebook\pics\07 - Libra.jpg"
+		}
+	}
+]

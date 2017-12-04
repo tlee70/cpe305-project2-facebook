@@ -1,6 +1,6 @@
 [
-	"Sam Haire",
-	"Steven Meissner",
 	"Taylor Wood",
+	"Steven Meissner",
+	"Yesenia Moreno",
 	"Dylan Kirkby"
 ]
