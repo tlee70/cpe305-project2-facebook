@@ -1,6 +1,7 @@
 [
-	"ONe",
+	"One",
 	"two",
-	"Th ree",
-	"four"
+	"three",
+	"fo-ur",
+	"fiive"
 ]

@@ -4,6 +4,9 @@ import java.awt.Image;
 
 import java.util.Collection;
 import java.util.List;
+
+import profile.NewsFeedModel.Pair;
+
 import java.util.LinkedList;
 import java.util.Iterator;
 
@@ -17,8 +20,8 @@ public class AccountModel {
 	private String name;
 	private Image picture;
 	private List<AccountModel> friends;
-	private MessageWallModel wall;
-	private MessageWallModel feed;
+	private LinkedList<String> wall;
+	private NewsFeedModel feed;
 	
 	private List<WallObserver> wallObs;
 	private List<PictureObserver> picObs;
@@ -29,8 +32,8 @@ public class AccountModel {
 		this.name = name;
 		this.picture = picture;
 		friends = new LinkedList<AccountModel>();
-		wall = new MessageWallModel();
-		feed = new MessageWallModel();
+		wall = new LinkedList<String>();
+		feed = new NewsFeedModel();
 		wallObs = new LinkedList<WallObserver>();
 		picObs = new LinkedList<PictureObserver>();
 		feedObs = new LinkedList<NewsFeedObserver>();
@@ -65,11 +68,20 @@ public class AccountModel {
 		}
 	}
 	
-	public MessageWallModel getWall() {
-		return wall;
+	public String getWallPosts() {
+		StringBuilder builder = new StringBuilder();
+		Iterator<String> iterator = wall.iterator();
+		while (iterator.hasNext()) {
+			builder.append(iterator.next());
+			if (iterator.hasNext()) {
+				builder.append("\n");
+			}
+		}
+		
+		return builder.toString();
 	}
 	
-	public MessageWallModel getFeed() {
+	public NewsFeedModel getFeed() {
 		return feed;
 	}
 	
@@ -128,7 +140,7 @@ public class AccountModel {
 	}
 	
 	public void post(String message) {
-		wall.post(message);
+		wall.add(message);
 		
 		// updates friends' feeds
 		AccountModel friend;
@@ -148,16 +160,13 @@ public class AccountModel {
 	}
 	
 	public void friendPost(AccountModel friend, String message) {
-		String text = friend.getName() + ": " + message;
-		//String text = message;
-		
-		feed.post(text);
+		feed.post(friend, message);
 		
 		NewsFeedObserver observer;
 		Iterator<NewsFeedObserver> observersIterator = feedObs.iterator();
 		while (observersIterator.hasNext()) {
 			observer = observersIterator.next();
-			observer.updateFeed(text);
+			observer.updateFeed( feed.getLatestPost() );
 		}
 	}
 
@@ -177,8 +186,8 @@ public class AccountModel {
 	 */
 	public void saveState() {
 		jsonWrite(friends, "files/friends.txt");
-		jsonWrite(wall.getPosts(), "files/wall.txt");
-		jsonWrite(feed.getPosts(), "files/feed.txt");
+		jsonWrite(wall, "files/wall.txt");
+		feed.saveState("files/feed.txt");
 	}
 
 	public void jsonWrite(Collection<?> collection, String fileName) {

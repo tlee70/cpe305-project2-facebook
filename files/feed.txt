@@ -1,5 +1,14 @@
 [
-	"Sam Haire: Kree",
-	"Dylan Kirkby: gabba",
-	"Yesenia Moreno: sixty"
+	{
+		left: Dylan Kirkby
+		right: sdf
+	},
+	{
+		left: Steven Meissner
+		right: Paklk
+	},
+	{
+		left: Steven Meissner
+		right: sdf
+	}
 ]

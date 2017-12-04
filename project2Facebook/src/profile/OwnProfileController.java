@@ -33,8 +33,15 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 		view.addFriendPostListener(new FriendPostListener());
 		view.addFriendsListener(new FriendsListListener());
 		
-		view.appendWall(myAcc_model.getWall().toString());
-		view.appendFeed(myAcc_model.getFeed().toString());
+		String wall = myAcc_model.getWallPosts();
+		if (wall!= null && wall.length() > 0) {
+			view.appendWall(wall);
+		}
+		
+		String feed = myAcc_model.getFeed().toString();
+		if (feed != null && feed.length() > 0) {
+			view.appendFeed(feed);
+		}
 
 		view.pack();
 		view.setVisible(true);
