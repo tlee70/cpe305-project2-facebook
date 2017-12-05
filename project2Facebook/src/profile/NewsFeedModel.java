@@ -121,10 +121,10 @@ public class NewsFeedModel {
 			while (iterator.hasNext()) {
 				JSONObject jobj = (JSONObject)iterator.next();
 				
-				String post = (String)jobj.get("post");
+				String post = (String)jobj.get("right");
 				
 				// links author of post to existing AccountModel instead of creating new instance
-				String posterName = (String)jobj.get("poster");
+				String posterName = (String)jobj.get("left");
 				AccountModel poster = accounts.get(posterName);
 				if (poster == null) {
 					System.out.println("NewsFeedModel could not find AccountModel '" + posterName + "'");
