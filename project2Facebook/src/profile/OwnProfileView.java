@@ -22,7 +22,12 @@ import javax.swing.BoxLayout;
 import java.util.List;
 import java.util.Iterator;
 
-public class OwnProfileView extends AbstractProfileView {
+/**
+ * Extends BasicProfileView to include wall, news feed, friends list, and ability to post as a friend
+ * @author Tim
+ *
+ */
+public class OwnProfileView extends BasicProfileView {
 
 	private static final Dimension FEED_SIZE = new Dimension(100,150);
 	private static final Dimension FRIENDS_SIZE = new Dimension(150,200);

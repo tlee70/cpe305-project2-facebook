@@ -1,14 +1,14 @@
 [
 	{
-		"poster": "Steven Meissner"
-		"post": "tinky-winky"
+		"left": "Steven Meissner"
+		"right": "tinky-winky"
 	},
 	{
-		"poster": "Yesenia Moreno"
-		"post": "blah"
+		"left": "Yesenia Moreno"
+		"right": "blah"
 	},
 	{
-		"poster": "Taylor Wood"
-		"post": "Rosewood"
+		"left": "Taylor Wood"
+		"right": "Rosewood"
 	}
 ]

@@ -5,7 +5,10 @@ import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
 
-public class StrangerProfileView extends AbstractProfileView {
+/**
+ * Extends BasicProfileView to display a follow button
+ */
+public class StrangerProfileView extends BasicProfileView {
 	
 	private JButton followBtn = new JButton("Follow");
 	

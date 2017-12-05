@@ -2,6 +2,11 @@ package login;
 
 import org.json.simple.JSONObject;
 
+/**
+ * Class containing a username and password to verify against
+ * @author Tim
+ *
+ */
 public class LoginModel {
 	private String username;
 	private String password;
@@ -41,6 +46,14 @@ public class LoginModel {
 		return true;
 	}
 	
+	/**
+	 * Checks whether LoginModels are equal
+	 * Checks that object is a valid LoginModel, then calls verify() method
+	 * Necessary for contains() method of Collections
+	 * 
+	 * @param other the Object to check for a match
+	 * @return whether the Object is a LoginModel whose username and password match this one's
+	 */
 	public boolean equals(Object other) {
 		if (other == null) {
 			return false;
@@ -53,10 +66,20 @@ public class LoginModel {
 		return otherLogin.verify(this.username, this.password);
 	}
 	
+	/**
+	 * Creates a hashcode for use with a hashmap
+	 * 
+	 * @return a hashcode for unique identification purposes
+	 */
 	public int hashCode() {
 		return (100*username.hashCode()) + password.hashCode();
 	}
 	
+	/**
+	 * Converts LoginModel into a JSON-formatted String
+	 * 
+	 * @return a JSON-formatted String representing this Object
+	 */
 	public String toJSON() {
 		StringBuilder builder = new StringBuilder();
 		String newlineChar = System.getProperty("line.separator");

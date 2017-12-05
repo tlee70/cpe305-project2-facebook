@@ -41,8 +41,8 @@
 	},
 	{
 		"LoginModel": {
-			"username": "A"
-			"password": "B"
+			"username": "tlee70"
+			"password": "terriblePassword"
 		},
 		"AccountModel": {
 			"name": "Tim Lee"

@@ -2,28 +2,24 @@ package profile;
 
 import login.LoginModel;
 
-import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
-public class StrangerProfileController extends AbstractProfileController<StrangerProfileView> 
-	implements PictureObserver {
+/**
+ * Extends BasicProfileController to add a button for following (becoming friends)
+ * @author Tim
+ *
+ */
+public class StrangerProfileController extends BasicProfileController<StrangerProfileView> {
 	
 	public StrangerProfileController(StrangerProfileView view, AccountModel strangerAcc_model, 
 			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase database) {
 		super(view, strangerAcc_model, myAcc_model, login_model, database);
-	
-		strangerAcc_model.addPicObserver(this);
-		
+
 		view.setFollowListener(new FollowListener());
 		
 		view.pack();
 		view.setVisible(true);
-	}
-	
-	public void updatePic(Image image) {
-		view.setProfilePic(image);
 	}
 	
 	class FollowListener implements ActionListener {

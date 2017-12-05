@@ -16,10 +16,20 @@ import org.json.simple.parser.ParseException;
 
 import login.LoginModel;
 
+/**
+ * Class for holding overall collection of LoginModels and paired AccountModels
+ * Extension of HashMap for implementation of JSON-related methods specific to this project
+ * @author Tim
+ *
+ */
 public class FacebookDatabase extends HashMap<LoginModel, AccountModel> {
 
-	private static final String LOGIN_FILE = "files/login_data.txt";
+	private static final File LOGIN_FILE = new File("files/login_data.txt");
 	
+	/**
+	 * Gets all accounts as a Map of username/AccountModel pairs for easy searching
+	 * @return Map<String, AccountModel> of paired username/AccountModel for ease of searching
+	 */
 	public Map<String, AccountModel> getAccounts() {
 		Map<String, AccountModel> accounts = new HashMap<String, AccountModel>();
 		
@@ -34,12 +44,14 @@ public class FacebookDatabase extends HashMap<LoginModel, AccountModel> {
 		return accounts;
 	}
 	
+	/**
+	 * Saves all login-account pairs to file specified by LOGIN_FILE
+	 * Delegates to entries' toJSON() methods, then ensures proper formatting in overall JSONArray
+	 */
 	public void saveState() {
-		File file = new File(LOGIN_FILE);
-		
 		String newLineChar = System.getProperty("line.separator");
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(LOGIN_FILE));
 			String newlineChar = System.getProperty("line.separator");
 			
 			writer.write("[");
@@ -80,10 +92,12 @@ public class FacebookDatabase extends HashMap<LoginModel, AccountModel> {
 		}
 	}
 	
+	/**
+	 * Initializes database from JSON-formatted file
+	 */
 	public void initialize() {
 		try {
-			File file = new File(LOGIN_FILE);
-			FileReader reader = new FileReader(file);
+			FileReader reader = new FileReader(LOGIN_FILE);
 			
 			JSONParser parser = new JSONParser();
 		    Object obj = parser.parse(reader);

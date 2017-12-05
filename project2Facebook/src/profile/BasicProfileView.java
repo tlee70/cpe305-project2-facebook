@@ -19,7 +19,13 @@ import javax.swing.JPanel;
 
 //import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-public abstract class AbstractProfileView extends JFrame {
+/**
+ * The most basic profile view for facebook project
+ * Displays only name, profile picture, search bar, settings, and logout
+ * @author Tim
+ *
+ */
+public class BasicProfileView extends JFrame {
 
 	protected static final int PICTURE_WIDTH = 150;
 	protected static final int PICTURE_HEIGHT = 150;
@@ -31,7 +37,7 @@ public abstract class AbstractProfileView extends JFrame {
 	protected JButton settingsBtn = new JButton("Settings");
 	protected JButton logoutBtn = new JButton("Logout");
 	
-	public AbstractProfileView() {
+	public BasicProfileView() {
 		content = new JPanel();
 		content.setLayout(new GridBagLayout());
 		this.setContentPane(content);

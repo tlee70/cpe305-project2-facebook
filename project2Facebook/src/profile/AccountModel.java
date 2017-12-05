@@ -6,10 +6,6 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Map;
 
-import java.awt.Image;
-
-import javax.imageio.ImageIO;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -21,28 +17,51 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/**
+ * Model class for MVC holding the state of a Facebook account and various methods for its manipulation
+ * 
+ * @author Tim
+ *
+ */
 public class AccountModel {
+
+	/**
+	 * The file to save/retrieve the friends list to/from
+	 */
+	private static final File FRIENDS_FILE =  new File("files/friends.txt");
+	/**
+	 * The file to save/retrieve the wall posts to/from
+	 */
+	private static final File WALL_FILE = new File("files/wall.txt");
 	
-	private static final String DEFAULT_BLANK_PIC_PATH = "pics/blank.png"; 
-	
-	private static final String FRIEND_FILE =  "files/friends.txt";
-	private static final String WALL_FILE = "files/wall.txt";
-	
+	// The name associated with the account and displayed in the profile
 	private String name;
-	private Image picture;
+	/**
+	 * The path to the picture displayed in the profile
+	 * Stored as String instead of Image of File so it can be saved to text file
+	 */
 	private String picturePath;
+	/**
+	 * The List of friends of this AccountModel
+	 * Friends see each others' wall posts in their news feed
+	 * Selecting a friend will bring up a FriendProfileView instead of a StrangerProfileView
+	 * All friendships are two-way
+	 */
 	private List<AccountModel> friends;
+	/**
+	 * Set of Strings representing an account's wall, where the user can post
+	 */
 	private LinkedList<String> wall;
+	/**
+	 * The account's feed displays posts from friends
+	 * Does not retroactively add/remove posts when someone is followed/unfollowed
+	 */
 	private NewsFeedModel feed;
 	
 	private List<WallObserver> wallObs;
 	private List<PictureObserver> picObs;
 	private List<NewsFeedObserver> feedObs;
 	private List<FriendsListObserver> friendsListObs;
-	
-	public AccountModel(String name) {
-			this(name, DEFAULT_BLANK_PIC_PATH);
-	}
 	
 	public AccountModel(String name, String imagefilePath) {
 		this.name = name;
@@ -55,15 +74,7 @@ public class AccountModel {
 		picObs = new LinkedList<PictureObserver>();
 		feedObs = new LinkedList<NewsFeedObserver>();
 		friendsListObs = new LinkedList<FriendsListObserver>();
-		
-		try {
-			Image picture = ImageIO.read(new File(picturePath));
-			this.picture = picture;
-		}
-		catch (IOException e) {
-			System.out.println(e);
-			System.out.println(e.getStackTrace());
-		}
+
 	}
 	
 	public AccountModel(JSONObject jaccount) {
@@ -74,12 +85,6 @@ public class AccountModel {
 		return name;
 	}
 	
-	/**
-	 * Overrides default toString method for purposes of displaying in GUI components
-	 * Returns name of AccountModel
-	 * 
-	 * @return the name associated with the AccountModel
-	 */
 	public String toString() {
 		return name;
 	}
@@ -101,33 +106,32 @@ public class AccountModel {
 		this.name = name;
 	}
 	
-	public Image getPicture() {
-		return picture;
-	}
-	
 	public String getPicturePath() {
 		return picturePath;
 	}
 
+	/**
+	 * Sets the picture (path) of the AccountModel and notifies PictureObservers
+	 * 
+	 * @param imageFilePath the path to the new image file
+	 */
 	public void setPicture(String imageFilePath) {
-		try {
-			Image picture = ImageIO.read(new File(imageFilePath));
-			this.picture = picture;
-			this.picturePath = imageFilePath;
-		}
-		catch (IOException e) {
-			System.out.println(e);
-			System.out.println(e.getStackTrace());
-		}
+		this.picturePath = imageFilePath;
 
 		PictureObserver observer;
 		Iterator<PictureObserver> observersIterator = picObs.iterator();
 		while (observersIterator.hasNext()) {
 			observer = observersIterator.next();
-			observer.updatePic(this.picture);
+			observer.updatePic(this.picturePath);
 		}
 	}
 	
+	/**
+	 * Gets all wall posts formatted with each post on a new line
+	 * Used in initializing wall of views
+	 * 
+	 * @return String of all wall posts with newlines separating each post
+	 */
 	public String getWallPosts() {
 		StringBuilder builder = new StringBuilder();
 		Iterator<String> iterator = wall.iterator();
@@ -141,6 +145,12 @@ public class AccountModel {
 		return builder.toString();
 	}
 	
+	/**
+	 * Gets all feed posts formatted into a single String to initialization of view
+	 * Formatting delegated to NewsFeedModel class
+	 * 
+	 * @return formatted String of all news feed posts
+	 */
 	public String getFeedPosts() {
 		return feed.toString();
 	}
@@ -149,8 +159,16 @@ public class AccountModel {
 		return friends;
 	}
 	
+	/**
+	 * Links an different AccountModel as a friend to this one
+	 * All friendships are two-way
+	 * Checks to ensure that new AccountModel is not this and is not already a friend
+	 * Notifies FriendsListObservers to update if friend successfully added
+	 * 
+	 * @param friend the AccountModel to attempt to add
+	 */
 	public void addFriend(AccountModel friend) {
-		if ( !friends.contains(friend) ) {
+		if ( !friend.equals(this) && !friends.contains(friend) ) {
 			friends.add(friend);
 			
 			FriendsListObserver observer;
@@ -159,13 +177,21 @@ public class AccountModel {
 				observer = observersIterator.next();
 				observer.notifyFriendAdd(friend);
 			}
-		}
-		
-		if ( !friend.getFriends().contains(this) ) {
-			friend.addFriend(this);
+			
+			// Prevents infinite recursive call between two AccountModels
+			if ( !friend.getFriends().contains(this) ) {
+				friend.addFriend(this);
+			}
 		}
 	}
 	
+	/**
+	 * Removes different AccountModel as a friend to this one
+	 * All friendships are two-way; breaks both sides of link
+	 * Notifies FriendsListObservers to update if friend successfully removed
+	 * 
+	 * @param friend the AccountModel to attempt to add
+	 */
 	public void removeFriend(AccountModel friend) {
 		if (friends.contains(friend)) {
 			friends.remove(friend);
@@ -178,6 +204,7 @@ public class AccountModel {
 			}
 		}
 		
+		// Prevents infinite recursion
 		if (friend.getFriends().contains(this)) {
 			friend.removeFriend(this);
 		}
@@ -199,6 +226,12 @@ public class AccountModel {
 		friendsListObs.add(observer);
 	}
 	
+	/**
+	 * Posts a message on one's own wall
+	 * Post also added to friends's news feeds
+	 * 
+	 * @param message String making up a facebook wall post
+	 */
 	public void post(String message) {
 		wall.add(message);
 		
@@ -219,6 +252,12 @@ public class AccountModel {
 		}
 	}
 	
+	/**
+	 * Takes a post from a friend and puts it in own news feed
+	 * 
+	 * @param friend the friend who posted
+	 * @param message the post's contents
+	 */
 	public void friendPost(AccountModel friend, String message) {
 		feed.post(friend, message);
 		
@@ -230,6 +269,46 @@ public class AccountModel {
 		}
 	}
 	
+	/**
+	 * Deactivation of account: removes all friends and empties wall and friend files
+	 * feed is NOT emptied because implementation has feed saving posts of other AccountModels
+	 */
+	public void deactivate() {
+		while (friends.size() > 0) {
+			removeFriend(friends.get(0));
+		}
+		
+		jsonWriteEmpty(WALL_FILE);
+		jsonWriteEmpty(FRIENDS_FILE);
+		
+		feed.saveState();
+	}
+	
+	/**
+	 * Rewrites a file to be an empty JSONArray
+	 * 
+	 * @param file the file to empty
+	 */
+	public void jsonWriteEmpty(File file) {
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.write("[]");
+			writer.flush();
+			
+			writer.close();
+		}
+		catch (IOException e) {
+			System.out.println(e.getStackTrace());
+			System.out.println(e);
+		}
+	}
+	
+	/**
+	 * Converts this Object to a JSON-formatted String
+	 * Used in place of library's JSONWriter for formatting easier to read by humans
+	 * 
+	 * @return String representing this data in JSON format
+	 */
 	public String toJSON() {
 		StringBuilder builder = new StringBuilder();
 		String newlineChar = System.getProperty("line.separator");
@@ -255,13 +334,20 @@ public class AccountModel {
 	 * List of friends, wall info, and news feed stored as separate text files
 	 */
 	public void saveState() {
-		jsonWriteCollection(friends, FRIEND_FILE);
+		jsonWriteCollection(friends, FRIENDS_FILE);
 		jsonWriteCollection(wall, WALL_FILE);
 		feed.saveState();
 	}
 
-	public void jsonWriteCollection(Collection<?> collection, String fileName) {
-		File file = new File(fileName);
+	/**
+	 * Generic helper method for saveState() saves a Collection as a JSONArray to a specified file
+	 * Contents of Collection saved by their toString() method as a string literal
+	 * Assumes content of Collection can be represented purely by toString()
+	 * 
+	 * @param collection the collection to save
+	 * @param file the file to write to 
+	 */
+	public void jsonWriteCollection(Collection<?> collection, File file) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			String newlineChar = System.getProperty("line.separator");
@@ -293,18 +379,23 @@ public class AccountModel {
 	/**
 	 * Initializes chosen account from input files w/ JSON format
 	 * 
-	 * @param accounts List of all accounts needed for linking to friends & feed posts
+	 * @param accounts List of all accounts; for linking to friends & to feed posts
 	 */
 	public void initialize(Map<String, AccountModel> accounts) {
 		initializeFriends(accounts);
-		initializePosts();
+		initializeWall();
 		NewsFeedModel.initialize(accounts);
 	}
 	
+	/**
+	 * Initializes friends list according to JSON-formatted file (defined as FRIENDS_FILE)
+	 * Uses Map<String, AccountModel> to link to existing accounts instead of creating new instances
+	 * 
+	 * @param accounts the map of AccountModels to link to and their name keys
+	 */
 	private void initializeFriends(Map<String, AccountModel> accounts) {
 		try {
-			File file = new File(FRIEND_FILE);
-			FileReader reader = new FileReader(file);
+			FileReader reader = new FileReader(FRIENDS_FILE);
 			
 			JSONParser parser = new JSONParser();
 		    Object obj = parser.parse(reader);
@@ -321,10 +412,8 @@ public class AccountModel {
 					this.addFriend(friend);
 				}
 
-			}
-			
+			}			
 			reader.close();
-
 		}
 		catch(IOException e) {
 			System.out.println("Initialize caught IOException: " + e);
@@ -336,10 +425,12 @@ public class AccountModel {
 		}	
 	}
 	
-	private void initializePosts() {
+	/**
+	 * Initializes wall based on JSON-formatted file of posts
+	 */
+	private void initializeWall() {
 		try {
-			File file = new File(WALL_FILE);
-			FileReader reader = new FileReader(file);
+			FileReader reader = new FileReader(WALL_FILE);
 			
 			JSONParser parser = new JSONParser();
 		    Object obj = parser.parse(reader);

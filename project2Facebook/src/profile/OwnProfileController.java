@@ -12,10 +12,15 @@ import javax.swing.event.ListSelectionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
-import java.awt.Image;
 
-public class OwnProfileController extends AbstractProfileController<OwnProfileView> 
-	implements PictureObserver, WallObserver, NewsFeedObserver, FriendsListObserver {
+/**
+ * Extends BasicProfileController to include wall, news feed, and friends list
+ * myAcc_model is also used as dispAcc_model
+ * @author Tim
+ *
+ */
+public class OwnProfileController extends BasicProfileController<OwnProfileView> 
+	implements WallObserver, NewsFeedObserver, FriendsListObserver {
 	
 	public OwnProfileController(OwnProfileView view, AccountModel myAcc_model, 
 			LoginModel login_model, FacebookDatabase database) {
@@ -23,16 +28,16 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 		
 		myAcc_model.initialize(database.getAccounts());
 
-		myAcc_model.addPicObserver(this);
 		myAcc_model.addWallObserver(this);
 		myAcc_model.addFeedObserver(this);
 		myAcc_model.addFriendsListObserver(this);
 		
-		view.setFriendsList(myAcc_model.getFriends());
-		
 		view.addWallListener(new MessagePostListener());
 		view.addFriendPostListener(new FriendPostListener());
 		view.addFriendsListener(new FriendsListListener());
+		
+		
+		view.setFriendsList(myAcc_model.getFriends());
 		
 		String wall = myAcc_model.getWallPosts();
 		if (wall!= null && wall.length() > 0) {
@@ -50,10 +55,6 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 	
 	public void updateWall(String message) {
 		view.appendWall(message);
-	}
-	
-	public void updatePic(Image image) {
-		view.setProfilePic(image);
 	}
 	
 	public void updateFeed(String message) {
@@ -80,6 +81,11 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 		}
 	}
 	
+	/**
+	 * Opens a dialog for posting as a friend
+	 * @author Tim
+	 *
+	 */
 	class FriendPostListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JList<AccountModel> friendsJList = new JList<AccountModel>();
@@ -105,6 +111,11 @@ public class OwnProfileController extends AbstractProfileController<OwnProfileVi
 		}
 	}
 	
+	/**
+	 * calls openFriendProfile() when a friend is selected from the friends list in the view
+	 * @author Tim
+	 *
+	 */
 	class FriendsListListener implements ListSelectionListener {  
 	 	public void valueChanged(ListSelectionEvent e) {
 	 		if ( !e.getValueIsAdjusting() ) { 

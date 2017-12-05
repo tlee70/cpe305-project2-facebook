@@ -7,10 +7,23 @@ import profile.OwnProfileView;
 import profile.OwnProfileController;
 import profile.FacebookDatabase;
 
+/**
+ * Controller for MVC that displays login screen
+ * Checks entered username and password against database of LoginModels
+ * Opens an OwnProfileController and OwnProfileView of AccountModel that pairs to LoginModel
+ * @author Tim
+ *
+ */
 public class LoginController {
 	private LoginView li_view;
 	private FacebookDatabase database;
 	
+	/**
+	 * Constructor connects to a view and map of LoginModel/AccountModel pairs
+	 * 
+	 * @param view the LoginView to control
+	 * @param database	the map of LoginModel/AccountModel pairs to check against
+	 */
 	public LoginController(LoginView view, FacebookDatabase database) {
 		this.li_view = view;
 		this.database = database;
@@ -19,6 +32,12 @@ public class LoginController {
 		view.setVisible(true);
 	}
 	
+	/**
+	 * Verifies login information and opens corresponding profile when enter button pressed
+	 * 
+	 * @author Tim
+	 *
+	 */
 	class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			LoginModel attemptedLogin = new LoginModel(li_view.getUsername(), li_view.getPassword());

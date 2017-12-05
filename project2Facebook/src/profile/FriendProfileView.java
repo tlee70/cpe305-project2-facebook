@@ -8,11 +8,15 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class FriendProfileView extends AbstractProfileView {
+/**
+ * Extension of BasicProfileView for displaying friend's wall and unfollow button
+ * @author Tim
+ *
+ */
+public class FriendProfileView extends BasicProfileView {
 	
 	private JButton unfollowBtn = new JButton("Unfollow");
 	private JTextArea wallArea;
-	
 	
 	public FriendProfileView() {
 		super();

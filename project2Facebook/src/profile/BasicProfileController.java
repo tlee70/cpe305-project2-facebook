@@ -1,25 +1,47 @@
 package profile;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import login.LoginModel;
 
-public abstract class AbstractProfileController<T extends AbstractProfileView> {
+/**
+ * BasicProfileController acts as Controller for Facebook MVC
+ * Pairs with BasicProfileView to display only name, picture, search bar, settings, and logout
+ * Meant to be extended for further functionality
+ * 
+ * @author Tim
+ *
+ * @param <T> generic used to allow child classes to use methods from T's child classes
+ */
+public class BasicProfileController<T extends BasicProfileView> 
+	implements PictureObserver {
 	
+	// View of MVC for displaying facebook profile
 	protected T view;
+	// AccountModel designated as owner of the view (settings affect this AccountModel)
 	protected AccountModel myAcc_model;
+	// AccountModel to display information for (can be the same as myAcc_model)
 	protected AccountModel dispAcc_model;
+	/**
+	 * The login information that is associated with myAcc_model
+	 * Necessary to modify login information with settings
+	 * Cannot be accessed with only myAcc_model and database because database not bidirectional
+	 */
 	protected LoginModel login_model;
+	// The database of all LoginModel/AccountModel pairs, used for search bar results
 	protected FacebookDatabase database;
 	
-	public AbstractProfileController(T view, AccountModel dispAcc_model, 
+	public BasicProfileController(T view, AccountModel dispAcc_model, 
 			AccountModel myAcc_model, LoginModel login_model, FacebookDatabase database) {
 		this.view = view;
 		this.dispAcc_model = dispAcc_model;
@@ -31,9 +53,11 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 		ArrayList<AccountModel> otherAccs = new ArrayList<AccountModel>(database.values());
 		otherAccs.remove(myAcc_model);
 		AccountModel[] accountsArr = (AccountModel[])otherAccs.toArray(new AccountModel[otherAccs.size()]);
-			
+		
+		dispAcc_model.addPicObserver(this);
+		
 		view.setProfileName(dispAcc_model.getName());
-		view.setProfilePic(dispAcc_model.getPicture());
+		updatePic(myAcc_model.getPicturePath());
 		view.setAllAccounts(accountsArr);
 			
 		view.addSettingsListener(new SettingsListener());
@@ -41,6 +65,17 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 		view.addSearchListener(new SearchBarListener());
 	}
 	
+	public void updatePic(String fileName) {
+		try {
+			Image picture = ImageIO.read(new File(fileName));
+			view.setProfilePic(picture);
+		}
+		catch (IOException e) {
+			System.out.println(e);
+			System.out.println(e.getStackTrace());
+		}
+		
+	}
 	/**
 	 * Creates and links FriendProfileView and FriendProfileController for given account
 	 * One-line code given own method so that child classes may call it
@@ -58,6 +93,10 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 				myAcc_model, login_model, database);
 	}
 	
+	/**
+	 * Opens browser dialogue for selecting new image from file system
+	 * Gets path from valid chosen picture and uses it to set myAcc_model's picture
+	 */
 	protected void selectPicture () {
 		JFileChooser fc = new JFileChooser();
 		fc.setCurrentDirectory(new File(System.getProperty("user.dir") + "/pics"));
@@ -68,13 +107,38 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 			myAcc_model.setPicture(selectedFile.getPath());
 		}
 	}
-		
+	
+	/**
+	 * Helper method for SettingsListener displays deactivation dialogue
+	 * If selected, calls deactivation methods and then exits
+	 */
+	protected void deactivateAccount() {
+		int verify = JOptionPane.showConfirmDialog(view, "Are you sure you wish to deactivate your account?",
+    			"Deactivation", JOptionPane.YES_NO_OPTION);
+    	if (verify == JOptionPane.YES_OPTION) {
+    		myAcc_model.deactivate();
+    		
+    		database.remove(login_model);
+    		database.saveState();
+    		
+    		System.exit(0);
+    	}
+	}
+	
+	/**
+	 * Displays a Window with 5 button options (including cancel)
+	 * User can change their username/password/picture, deactivate their account, or do nothing
+	 * @author Tim
+	 *
+	 */
 	class SettingsListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			String[] options = new String[] {"Username", "Password", "Profile Picture", "Cancel"};
+			String[] options = new String[] {"Username", "Password", "Profile Picture",
+					"Deactivate Account", "Cancel"};
+			
 		    int response = JOptionPane.showOptionDialog(view, "Select an option to change", "Settings",
 		        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-		        null, options, options[3]);
+		        null, options, options[4]);
 		    
 		    if (response == 0) {
 		    	String username = JOptionPane.showInputDialog(view, "Set new username", login_model.getUsername());
@@ -86,11 +150,17 @@ public abstract class AbstractProfileController<T extends AbstractProfileView> {
 		    		login_model.setPassword(password);
 		    } else if (response == 2) {
 		    	selectPicture();
-		    } 
-			
+		    } else if (response == 3) {
+		    	deactivateAccount();
+		    }
 		}
 	}
 	
+	/**
+	 * Listener for logout button tells models to save state to files before exiting
+	 * @author Tim
+	 *
+	 */
 	class LogoutListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			view.showMessage("Logging you out");
