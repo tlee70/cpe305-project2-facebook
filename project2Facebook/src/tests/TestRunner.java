@@ -7,6 +7,7 @@ import org.junit.runner.notification.Failure;
 public class TestRunner {
 	public static void main(String[] args) {
 		runTests(LoginModelTester.class);
+		runTests(NewsFeedModelTester.class);
 		runTests(AccountModelTester.class);
 
 	}
