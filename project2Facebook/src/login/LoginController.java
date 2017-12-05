@@ -9,6 +9,7 @@ import profile.FacebookDatabase;
 
 /**
  * Controller for MVC that displays login screen
+ * 
  * Checks entered username and password against database of LoginModels
  * Opens an OwnProfileController and OwnProfileView of AccountModel that pairs to LoginModel
  * @author Tim

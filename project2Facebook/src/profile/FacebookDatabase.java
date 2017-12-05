@@ -28,7 +28,7 @@ public class FacebookDatabase extends HashMap<LoginModel, AccountModel> {
 	
 	/**
 	 * Gets all accounts as a Map of username/AccountModel pairs for easy searching
-	 * @return Map<String, AccountModel> of paired username/AccountModel for ease of searching
+	 * @return Map of paired username/AccountModel for ease of searching
 	 */
 	public Map<String, AccountModel> getAccounts() {
 		Map<String, AccountModel> accounts = new HashMap<String, AccountModel>();

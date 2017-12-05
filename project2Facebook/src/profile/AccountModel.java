@@ -38,11 +38,13 @@ public class AccountModel {
 	private String name;
 	/**
 	 * The path to the picture displayed in the profile
+	 * 
 	 * Stored as String instead of Image of File so it can be saved to text file
 	 */
 	private String picturePath;
 	/**
 	 * The List of friends of this AccountModel
+	 * 
 	 * Friends see each others' wall posts in their news feed
 	 * Selecting a friend will bring up a FriendProfileView instead of a StrangerProfileView
 	 * All friendships are two-way
@@ -54,6 +56,7 @@ public class AccountModel {
 	private LinkedList<String> wall;
 	/**
 	 * The account's feed displays posts from friends
+	 * 
 	 * Does not retroactively add/remove posts when someone is followed/unfollowed
 	 */
 	private NewsFeedModel feed;
@@ -128,6 +131,7 @@ public class AccountModel {
 	
 	/**
 	 * Gets all wall posts formatted with each post on a new line
+	 * 
 	 * Used in initializing wall of views
 	 * 
 	 * @return String of all wall posts with newlines separating each post
@@ -147,6 +151,7 @@ public class AccountModel {
 	
 	/**
 	 * Gets all feed posts formatted into a single String to initialization of view
+	 * 
 	 * Formatting delegated to NewsFeedModel class
 	 * 
 	 * @return formatted String of all news feed posts
@@ -161,6 +166,7 @@ public class AccountModel {
 	
 	/**
 	 * Links an different AccountModel as a friend to this one
+	 * 
 	 * All friendships are two-way
 	 * Checks to ensure that new AccountModel is not this and is not already a friend
 	 * Notifies FriendsListObservers to update if friend successfully added
@@ -187,6 +193,7 @@ public class AccountModel {
 	
 	/**
 	 * Removes different AccountModel as a friend to this one
+	 * 
 	 * All friendships are two-way; breaks both sides of link
 	 * Notifies FriendsListObservers to update if friend successfully removed
 	 * 
@@ -227,8 +234,7 @@ public class AccountModel {
 	}
 	
 	/**
-	 * Posts a message on one's own wall
-	 * Post also added to friends's news feeds
+	 * Posts a message on one's own wall and friends' news feeds
 	 * 
 	 * @param message String making up a facebook wall post
 	 */
@@ -271,6 +277,7 @@ public class AccountModel {
 	
 	/**
 	 * Deactivation of account: removes all friends and empties wall and friend files
+	 * 
 	 * feed is NOT emptied because implementation has feed saving posts of other AccountModels
 	 */
 	public void deactivate() {
@@ -305,6 +312,7 @@ public class AccountModel {
 	
 	/**
 	 * Converts this Object to a JSON-formatted String
+	 * 
 	 * Used in place of library's JSONWriter for formatting easier to read by humans
 	 * 
 	 * @return String representing this data in JSON format
@@ -317,7 +325,7 @@ public class AccountModel {
 		builder.append(newlineChar);
 		builder.append("\t");
 		builder.append("\"name\": ");
-		builder.append("\"" + name + "\"");
+		builder.append("\"" + name + "\",");
 		builder.append(newlineChar);
 		builder.append("\t");
 		builder.append("\"picturePath\": ");
@@ -331,6 +339,7 @@ public class AccountModel {
 	
 	/**
 	 * Saves the state of the AccountModel for comparison and possible recovery
+	 * 
 	 * List of friends, wall info, and news feed stored as separate text files
 	 */
 	public void saveState() {
@@ -341,6 +350,7 @@ public class AccountModel {
 
 	/**
 	 * Generic helper method for saveState() saves a Collection as a JSONArray to a specified file
+	 *
 	 * Contents of Collection saved by their toString() method as a string literal
 	 * Assumes content of Collection can be represented purely by toString()
 	 * 
@@ -379,7 +389,7 @@ public class AccountModel {
 	/**
 	 * Initializes chosen account from input files w/ JSON format
 	 * 
-	 * @param accounts List of all accounts; for linking to friends & to feed posts
+	 * @param accounts List of all accounts; for linking to friends and to feed posts
 	 */
 	public void initialize(Map<String, AccountModel> accounts) {
 		initializeFriends(accounts);
@@ -389,6 +399,7 @@ public class AccountModel {
 	
 	/**
 	 * Initializes friends list according to JSON-formatted file (defined as FRIENDS_FILE)
+	 * 
 	 * Uses Map<String, AccountModel> to link to existing accounts instead of creating new instances
 	 * 
 	 * @param accounts the map of AccountModels to link to and their name keys

@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 
 /**
  * Class containing a username and password to verify against
+ * 
  * @author Tim
  *
  */
@@ -48,6 +49,7 @@ public class LoginModel {
 	
 	/**
 	 * Checks whether LoginModels are equal
+	 * 
 	 * Checks that object is a valid LoginModel, then calls verify() method
 	 * Necessary for contains() method of Collections
 	 * 
@@ -88,7 +90,7 @@ public class LoginModel {
 		builder.append(newlineChar);
 		builder.append("\t");
 		builder.append("\"username\": ");
-		builder.append("\"" + username + "\"");
+		builder.append("\"" + username + "\",");
 		builder.append(newlineChar);
 		builder.append("\t");
 		builder.append("\"password\": ");

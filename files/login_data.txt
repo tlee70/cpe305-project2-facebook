@@ -1,72 +1,72 @@
 [
 	{
 		"LoginModel": {
-			"username": "taylorWood"
+			"username": "taylorWood",
 			"password": "M0rn1ngW00d"
 		},
 		"AccountModel": {
-			"name": "Taylor Wood"
+			"name": "Taylor Wood",
 			"picturePath": "pics/blank.png"
 		}
 	},
 	{
 		"LoginModel": {
-			"username": "stevenMeissner"
+			"username": "stevenMeissner",
 			"password": "phteven"
 		},
 		"AccountModel": {
-			"name": "Steven Meissner"
+			"name": "Steven Meissner",
 			"picturePath": "pics/blank.png"
 		}
 	},
 	{
 		"LoginModel": {
-			"username": "yesMoreno"
+			"username": "yesMoreno",
 			"password": "corruptingInfluence"
 		},
 		"AccountModel": {
-			"name": "Yesenia Moreno"
+			"name": "Yesenia Moreno",
 			"picturePath": "pics/blank.png"
 		}
 	},
 	{
 		"LoginModel": {
-			"username": "calebBarber"
+			"username": "calebBarber",
 			"password": "B@rb3r5hop"
 		},
 		"AccountModel": {
-			"name": "Caleb Barber"
+			"name": "Caleb Barber",
 			"picturePath": "pics/blank.png"
 		}
 	},
 	{
 		"LoginModel": {
-			"username": "tlee70"
-			"password": "terriblePassword"
-		},
-		"AccountModel": {
-			"name": "Tim Lee"
-			"picturePath": "C:\Users\Tim\git\cpe305-project2-facebook\pics\04 - Cancer.jpg"
-		}
-	},
-	{
-		"LoginModel": {
-			"username": "samHaire"
+			"username": "samHaire",
 			"password": "hairysam"
 		},
 		"AccountModel": {
-			"name": "Sam Haire"
+			"name": "Sam Haire",
 			"picturePath": "pics/blank.png"
 		}
 	},
 	{
 		"LoginModel": {
-			"username": "dylanKirkby"
+			"username": "dylanKirkby",
 			"password": "quirkyKirkby"
 		},
 		"AccountModel": {
-			"name": "Dylan Kirkby"
+			"name": "Dylan Kirkby",
 			"picturePath": "pics/blank.png"
+		}
+	},
+	{
+		"LoginModel": {
+			"username": "tlee70",
+			"password": "terriblePassword"
+		},
+		"AccountModel": {
+			"name": "Tim Lee",
+			"picturePath": "C:\Users\Tim\git\cpe305-project2-facebook\pics\04 - Cancer.jpg"
 		}
 	}
 ]
